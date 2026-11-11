@@ -1,22 +1,42 @@
 # TODO
 
-- analisar o file de workflows
-- criar repo e fazer commit
-- incluir detalhes tecnicos e de segurança no readme
-- validar a criação de reports: 
+## Repositório & Organização GitHub
 
-## Estratégia de Investimento
+- [ ] Mover `finances-manager` (https://github.com/JoPedro15/finances-manager) para a organization `jopedro-labs`
+- [ ] Remover `finances-lab` (https://github.com/jopedro-labs/finances-lab) da organization e manter no GitHub como repo pessoal arquivado
+- [ ] Extrair `infra/logger` para repo separado na organization — módulo partilhado por vários projetos
+- [ ] Extrair `infra/gdrive` para repo separado na organization — módulo partilhado por vários projetos
 
-Objetivo de longo prazo — horizonte de 20 anos ou mais, focado em rendimento composto através de uma carteira diversificada de ETFs globais e ações de qualidade. A prioridade é a acumulação consistente, não o timing de mercado.
+## Documentação
 
+- [ ] Adicionar detalhes técnicos e de segurança ao README (OAuth2 scope, gitignore de `secrets/`, aviso sobre `.env`)
+- [ ] Adicionar a estratégia de investimento ao `data/rules.md` (ver secção abaixo)
 
-## Futuro — Métricas XTB adicionais
+## Pipeline
 
-Campos atualmente ignorados pelo pipeline de extração que podem ser considerados no futuro:
+- [ ] Validar a criação de reports end-to-end (`make report` e `make report-html`)
 
-- **Swaps / Financing Fees** (`swap`) — custos de financiamento acumulados; relevante se CFDs ou alavancagem forem introduzidos
-- **Commissions** (`commission`) — comissões de transação; útil para tracking de custo líquido real
-- **Margin / Leverage** (`margin`) — nível de alavancagem; relevante para auditoria de risco (atualmente assumido 1:1)
-- **Open Time** (`open_time`) — timestamp de execução da ordem; útil para análise de período de detenção e fiscalidade
+## GitHub Actions
 
-> Estes campos são não-essenciais porque o scoring, gaps de alocação e projeções dependem apenas de valores soberanos do broker (market value, P&L e targets).
+- [ ] Analisar e rever `.github/workflows/lint.yml` — verificar se cobre todos os casos necessários (python version, dependências, mypy strict)
+
+---
+
+## Estratégia de Investimento — a adicionar ao `data/rules.md`
+
+> Objetivo de longo prazo — horizonte de 20 anos ou mais, focado em rendimento composto através de uma carteira diversificada de ETFs globais e ações de qualidade. A prioridade é a acumulação consistente, não o timing de mercado.
+
+---
+
+## Backlog — Métricas XTB adicionais (não urgente)
+
+Campos actualmente ignorados pelo pipeline de extracção que podem ser considerados no futuro:
+
+| Campo         | Descrição                                                                                       |
+|---------------|-------------------------------------------------------------------------------------------------|
+| `swap`        | Swaps / Financing Fees — custos de financiamento acumulados; relevante se CFDs ou alavancagem  |
+| `commission`  | Comissões de transacção — útil para tracking de custo líquido real                              |
+| `margin`      | Nível de alavancagem — relevante para auditoria de risco (actualmente assumido 1:1)             |
+| `open_time`   | Timestamp de execução da ordem — útil para análise de período de detenção e fiscalidade         |
+
+> Estes campos são não-essenciais porque o scoring, gaps de alocação e projecções dependem apenas de valores soberanos do broker (market value, P&L e targets).
