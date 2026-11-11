@@ -1,0 +1,180 @@
+{
+  "assets": [
+    {
+      "name": "Core MSCI World",
+      "isin": "IE00B4L5Y983",
+      "yahoo_ticker": "EUNL.DE",
+      "ticker": "EUNL.DE",
+      "xtb_name": "Core MSCI World",
+      "asset_type": "ETF",
+      "currency": "EUR",
+      "quantity": 7,
+      "average_buy_price": 130.995
+    },
+    {
+      "name": "MSCI World Momentum USD (Acc)",
+      "isin": "IE00BL25JP72",
+      "yahoo_ticker": "XDEM.DE",
+      "ticker": "XDEM.DE",
+      "xtb_name": "MSCI World Momentum",
+      "asset_type": "ETF",
+      "currency": "EUR",
+      "quantity": 4,
+      "average_buy_price": 84.99
+    },
+    {
+      "name": "HSBC MSCI Emerging Markets UCITS ETF",
+      "isin": "IE000KCS7J59",
+      "yahoo_ticker": "H4Z3.DE",
+      "ticker": "H410.DE",
+      "xtb_name": "MSCI Emerging Markets",
+      "asset_type": "ETF",
+      "currency": "EUR",
+      "quantity": 20,
+      "average_buy_price": 14.5195
+    },
+    {
+      "name": "VanEck Defense UCITS ETF",
+      "isin": "IE000YYE6WK5",
+      "yahoo_ticker": "DFEN.DE",
+      "ticker": "DFEN.DE",
+      "xtb_name": "Defense",
+      "asset_type": "ETF",
+      "currency": "EUR",
+      "quantity": 4,
+      "average_buy_price": 50.81
+    },
+    {
+      "name": "VanEck Uranium and Nuclear Technologies UCITS ETF",
+      "isin": "IE000M7V94E1",
+      "yahoo_ticker": "NUKL.DE",
+      "ticker": "NUKL.DE",
+      "xtb_name": "Uranium and Nuclear Technlgs",
+      "asset_type": "ETF",
+      "currency": "EUR",
+      "quantity": 5,
+      "average_buy_price": 39.49
+    },
+    {
+      "name": "Apple Inc.",
+      "isin": "US0378331005",
+      "yahoo_ticker": "AAPL",
+      "ticker": "AAPL.US",
+      "xtb_name": "Apple",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 0,
+      "average_buy_price": 0.0
+    },
+    {
+      "name": "Amazon.com, Inc.",
+      "isin": "US0231351067",
+      "yahoo_ticker": "AMZN",
+      "ticker": "AMZN.US",
+      "xtb_name": "Amazon",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 1,
+      "average_buy_price": 262.74
+    },
+    {
+      "name": "NVIDIA Corporation",
+      "isin": "US67066G1040",
+      "yahoo_ticker": "NVDA",
+      "ticker": "NVDA.US",
+      "xtb_name": "Nvidia",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 2,
+      "average_buy_price": 221.00
+    },
+    {
+      "name": "Microsoft Corporation",
+      "isin": "US5949181045",
+      "yahoo_ticker": "MSFT",
+      "ticker": "MSFT.US",
+      "xtb_name": "Microsoft",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 0,
+      "average_buy_price": 0.0
+    },
+    {
+      "name": "Alphabet Inc. (Class A)",
+      "isin": "US02079K3059",
+      "yahoo_ticker": "GOOGL",
+      "ticker": "GOOGL.US",
+      "xtb_name": "Alphabet",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 0,
+      "average_buy_price": 0.0
+    },
+    {
+      "name": "Taiwan Semiconductor Manufacturing Company Limited",
+      "isin": "US8740391003",
+      "yahoo_ticker": "TSM",
+      "ticker": "TSM.US",
+      "xtb_name": "TSMC",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 1,
+      "average_buy_price": 433.64
+    },
+    {
+      "name": "Eli Lilly and Company",
+      "isin": "US5324571083",
+      "yahoo_ticker": "LLY",
+      "ticker": "LLY.US",
+      "xtb_name": "Eli Lilly",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 0,
+      "average_buy_price": 0.0
+    },
+    {
+      "name": "Novo Nordisk A/S (Class B)",
+      "isin": "DK0062498333",
+      "yahoo_ticker": "NOVO-B.CO",
+      "ticker": "NOVOB.DK",
+      "xtb_name": "Novo Nordisk",
+      "asset_type": "STOCK",
+      "currency": "DKK",
+      "quantity": 0,
+      "average_buy_price": 0.0
+    },
+    {
+      "name": "Berkshire Hathaway Inc. (Class B)",
+      "isin": "US0846707026",
+      "yahoo_ticker": "BRK-B",
+      "ticker": "BRKB.US",
+      "xtb_name": "Berkshire Hathaway",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 0,
+      "average_buy_price": 0.0
+    },
+    {
+      "name": "JPMorgan Chase & Co.",
+      "isin": "US46625H1005",
+      "yahoo_ticker": "JPM",
+      "ticker": "JPM.US",
+      "xtb_name": "JPMorgan Chase",
+      "asset_type": "STOCK",
+      "currency": "USD",
+      "quantity": 1,
+      "average_buy_price": 336.87
+    },
+    {
+      "name": "LVMH Moët Hennessy Louis Vuitton SE",
+      "isin": "FR0010208488",
+      "yahoo_ticker": "MC.PA",
+      "ticker": "MC.FR",
+      "xtb_name": "LVMH",
+      "asset_type": "STOCK",
+      "currency": "EUR",
+      "quantity": 0,
+      "average_buy_price": 0.0
+    }
+  ]
+}

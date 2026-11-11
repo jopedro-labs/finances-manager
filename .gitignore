@@ -1,0 +1,16 @@
+.env
+secrets/
+data/.temp_snapshot.json
+input/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.DS_Store
+.venv/
+.idea/
+index.html
+reports/
