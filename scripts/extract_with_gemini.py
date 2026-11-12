@@ -53,7 +53,7 @@ def get_latest_image(input_dir: Path) -> Path:
     patterns = ["*.png", "*.jpg", "*.jpeg", "*.PNG", "*.JPG", "*.JPEG"]
     files = [f for p in patterns for f in input_dir.glob(p)]
     if not files:
-        logger.error(f"[gemini extractor]No image files found in '{input_dir}'.")
+        logger.error(f"[gemini extractor] No image files found in '{input_dir}'.")
         logger.info(
             "[gemini extractor] Please place an XTB Open Positions screenshot inside the 'input/' folder."
         )
@@ -138,9 +138,9 @@ def build_snapshot(extracted: ExtractedSnapshot) -> dict[str, Any]:
         if "isin" in item
     }
     target_by_ticker = {
-        item["ticker"]: item.get("target_allocation_pct", 0.0)
+        item["yahoo_ticker"]: item.get("target_allocation_pct", 0.0)
         for item in portfolio_targets.get("assets", [])
-        if "ticker" in item
+        if "yahoo_ticker" in item
     }
 
     now = datetime.datetime.now(datetime.UTC)
@@ -153,10 +153,10 @@ def build_snapshot(extracted: ExtractedSnapshot) -> dict[str, Any]:
 
     for item in extracted.holdings:
         meta: dict[str, Any] = meta_by_name.get(item.xtb_name, {})
-        ticker = meta.get("ticker", item.xtb_name)
+        ticker = meta.get("yahoo_ticker", item.xtb_name)
         processed_tickers.add(ticker)
 
-        currency = meta.get("currency", "EUR")
+        currency = meta.get("native_currency", "EUR")
         price_key = f"market_price_{currency.lower()}"
         buy_key = f"average_buy_price_{currency.lower()}"
         isin = meta.get("isin", "")
@@ -167,7 +167,7 @@ def build_snapshot(extracted: ExtractedSnapshot) -> dict[str, Any]:
             (unrealized_pnl_eur / total_cost_eur * 100) if total_cost_eur else 0.0
         )
 
-        target_alloc = target_by_isin.get(isin) or target_by_ticker.get(ticker, 0.0)
+        target_alloc = target_by_isin.get(isin) if isin in target_by_isin else target_by_ticker.get(ticker, 0.0)
 
         holdings.append(
             {
@@ -190,13 +190,13 @@ def build_snapshot(extracted: ExtractedSnapshot) -> dict[str, Any]:
 
     # Add watchlist items (qty = 0) not present in the screenshot
     for target_item in portfolio_targets.get("assets", []):
-        ticker = target_item.get("ticker")
+        ticker = target_item.get("yahoo_ticker")
         if not ticker or ticker in processed_tickers:
             continue
         watchlist_meta: dict[str, Any] = next(
-            (item for item in portfolio_meta.get("assets", []) if item.get("ticker") == ticker), {}
+            (item for item in portfolio_meta.get("assets", []) if item.get("yahoo_ticker") == ticker), {}
         )
-        currency = watchlist_meta.get("currency", "EUR")
+        currency = watchlist_meta.get("native_currency", "EUR")
         buy_key = f"average_buy_price_{currency.lower()}"
         price_key = f"market_price_{currency.lower()}"
         isin = target_item.get("isin", watchlist_meta.get("isin", ""))

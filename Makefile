@@ -20,9 +20,6 @@ snapshot:
 	@echo "Processing XTB screenshot with Gemini Vision..."
 	@$(PYTHON) scripts/extract_with_gemini.py
 
-report:
-	@$(PYTHON) scripts/generate_portfolio_report.py md
-
 report-html:
 	@$(PYTHON) scripts/generate_portfolio_report.py html
 

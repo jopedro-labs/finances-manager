@@ -9,11 +9,14 @@ description = "Portfolio manager — AI-driven analysis via Gemini engine."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "fastparquet>=2024.2.0",
     "google-api-python-client>=2.100.0",
     "google-auth-httplib2>=0.2.0",
     "google-auth-oauthlib>=1.2.0",
     "google-genai>=0.1.0",
+    "pandas>=2.2.0",
     "pydantic-settings>=2.0.0",
+    "yfinance>=0.2.30",
 ]
 
 [tool.setuptools.packages.find]

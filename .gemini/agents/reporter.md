@@ -16,7 +16,7 @@ Produce complete, self-contained HTML (no external dependencies) with:
 
 ### Header
 - Title: "Portfolio Report — DD/MM/YYYY"
-- Snapshot timestamp: the **exact** `timestamp` field from the snapshot object (e.g. `Data: 2026-11-07 21:11 UTC`). 
+- Snapshot timestamp: the **exact** `timestamp` field from the snapshot object (e.g. `Time: 2026-11-07 21:11 UTC`). 
 This tells the user precisely how fresh the data is. Never use the current time — always use the snapshot's own timestamp.
 
 ### Section 1 — Macro Summary
@@ -29,6 +29,7 @@ This tells the user precisely how fresh the data is. Never use the current time 
 **Exposure charts** (pure HTML/CSS — no JS libraries):
 - Country exposure: horizontal bars with percentages
 - Sector exposure: horizontal bars
+- Company exposure: horizontal bars with percentages
 - Historical evolution: table of recent snapshots (date, market value, P&L)
 
 ### Section 2 — Holdings & Recommendations
