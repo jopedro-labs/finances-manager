@@ -29,7 +29,7 @@ make report             → analyst → reporter → HTML/MD report
 | `infra/logger.py`                      | Structured logger for consistent terminal/file output with contextual prefixes       |
 | `infra/utils/file_utils.py`            | Safe text file loading utility with error handling and encoding fallback             |
 | `scripts/extract_with_gemini.py`       | Extracts positions from XTB screenshot via Gemini Vision → triggers snapshot.py      |
-| `scripts/snapshot.py`                  | Reads temp JSON → appends snapshots.json → syncs to GDrive                           |
+| `scripts/run_snapshot.py`                  | Reads temp JSON → appends snapshots.json → syncs to GDrive                           |
 | `scripts/generate_portfolio_report.py` | Calls Gemini with analyst + reporter instructions → saves report to reports/         |
 | `reports/`                             | Generated reports (gitignored) — YYYY-MM-DD.md or YYYY-MM-DD.html                    |
 | `config.py`                            | pydantic-settings Settings: paths + GDrive folder IDs + Gemini config                |
@@ -40,7 +40,7 @@ make report             → analyst → reporter → HTML/MD report
 | Agent       | Triggered by       | Responsibility                                           |
 |-------------|--------------------|----------------------------------------------------------|
 | `extractor` | `make snapshot`    | Extracts structured data from XTB screenshot in `input/` |
-| `snapshot`  | `make snapshot`    | Calculates totals, persists snapshot, syncs GDrive       |
+| `run_snapshot.py`  | `make snapshot`    | Calculates totals, persists snapshot, syncs GDrive       |
 | `analyst`   | `make report`      | Applies rules.md — scores, recommendations, projections  |
 | `reporter`  | `make report`      | Generates HTML or Markdown report with 3 sections        |
 

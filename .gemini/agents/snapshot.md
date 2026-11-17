@@ -56,7 +56,7 @@ Assemble the complete JSON in the format below, then:
 2. Invoke:
 
 ```bash
-python scripts/snapshot.py data/.temp_snapshot.json
+python scripts/run_snapshot.py data/.temp_snapshot.json
 ```
 
 The script reads the file, appends the snapshot, syncs to GDrive, and deletes the temp file automatically. This avoids shell escaping issues that arise when passing large JSON payloads as a command-line argument.

@@ -36,7 +36,7 @@ snapshots/snapshots.json
 | Agent       | Responsibility                                                        |
 |-------------|-----------------------------------------------------------------------|
 | `extractor` | Reads the XTB screenshot and extracts structured position data        |
-| `snapshot`  | Calculates totals, allocations, costs and persists the snapshot       |
+| `run_snapshot.py`  | Calculates totals, allocations, costs and persists the snapshot       |
 | `analyst`   | Applies `data/rules.md` — scores, tiers, recommendations, projections |
 | `reporter`  | Renders the final report in HTML or Markdown                          |
 
@@ -51,8 +51,8 @@ snapshots/snapshots.json
 | `data/portfolio_targets.json`          | Target allocation (%) per asset — drives rebalancing scores                |
 | `data/rules.md`                        | Business rules: scoring formulas, decision matrix, projections, governance |
 | `snapshots/snapshots.json`             | Historical snapshot log with P&L, market values and allocations            |
-| `scripts/extract_with_gemini.py`       | Gemini Vision extraction → writes temp JSON → triggers `snapshot.py`       |
-| `scripts/snapshot.py`                  | Reads temp JSON → appends `snapshots.json` → syncs to GDrive               |
+| `scripts/extract_with_gemini.py`       | Gemini Vision extraction → writes temp JSON → triggers `run_snapshot.py`       |
+| `scripts/run_snapshot.py`                  | Reads temp JSON → appends `snapshots.json` → syncs to GDrive               |
 | `scripts/generate_portfolio_report.py` | Calls Gemini with analyst + reporter instructions → saves report           |
 | `reports/`                             | Generated reports — `YYYY-MM-DD.md` or `YYYY-MM-DD.html` (gitignored)     |
 | `config.py`                            | Centralised settings via pydantic-settings (paths + env vars)              |
