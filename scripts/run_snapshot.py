@@ -18,16 +18,16 @@ from typing import Any
 ROOT_DIR: Path = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
 
-from core_lib.logger import logger  # noqa: E402
 from core_lib.gdrive import GDriveService  # noqa: E402
+from core_lib.logger import logger  # noqa: E402
 from dotenv import load_dotenv  # noqa: E402
 
 from config import get_settings  # noqa: E402
 from infra.database.connection import get_db_context  # noqa: E402
 from infra.database.schema import initialize_database  # noqa: E402
 from scripts.extract_xtb_open_positions import (  # noqa: E402
-    get_screenshot_path,
     extract_data_from_screenshot,
+    get_screenshot_path,
 )
 
 load_dotenv()
