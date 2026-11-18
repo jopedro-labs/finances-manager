@@ -1,52 +1,52 @@
 """
-Persists a new portfolio snapshot to SQLite and backs up the database to Google Drive.
+Orchestrates the portfolio snapshot pipeline: downloads the XTB screenshot from Google Drive,
+extracts structured data using Gemini Vision, persists the snapshot to SQLite,
+and backs up the updated database back to Google Drive.
 
 Usage:
-    python scripts/run_snapshot.py <path_to_json_file>
-
-The JSON file must contain a complete snapshot object matching the format produced
-by the extractor agent. Pass a file path to avoid shell escaping issues.
-The temp file is deleted after successful processing.
+    python scripts/run_snapshot.py
 """
 
 from __future__ import annotations
 
 import json
+import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
 
 ROOT_DIR: Path = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
-sys.path.insert(0, str(ROOT_DIR / "core"))
 
-from core_lib.logger import logger
-from dotenv import load_dotenv
+from core_lib.logger import logger  # noqa: E402
+from core_lib.gdrive import GDriveService  # noqa: E402
+from dotenv import load_dotenv  # noqa: E402
 
-from config import get_settings
-from infra.database.connection import get_db_context
-from infra.database.schema import initialize_database
+from config import get_settings  # noqa: E402
+from infra.database.connection import get_db_context  # noqa: E402
+from infra.database.schema import initialize_database  # noqa: E402
+from scripts.extract_xtb_open_positions import (  # noqa: E402
+    download_screenshot_from_gdrive,
+    extract_data_from_screenshot,
+)
 
 load_dotenv()
 
 
 def _get_asset_id(cursor: Any, yahoo_ticker: str, isin: str | None) -> int | None:
+    """Resolves asset internal ID by ISIN or fallback Yahoo ticker."""
     if isin:
         cursor.execute("SELECT id FROM assets WHERE isin = ?", (isin,))
         row: sqlite3.Row | None = cursor.fetchone()
         if row:
             return int(row["id"])
     cursor.execute("SELECT id FROM assets WHERE yahoo_ticker = ?", (yahoo_ticker,))
-    row: sqlite3.Row | None = cursor.fetchone()
-    return int(row["id"]) if row else None
+    ticker_row: sqlite3.Row | None = cursor.fetchone()
+    return int(ticker_row["id"]) if ticker_row else None
 
 
 def _sync_assets_from_portfolio(cursor: Any, db_path: Path) -> None:
-    """Upserts assets from portfolio.json into the assets table.
-
-    Runs before every snapshot so new assets added to portfolio.json are
-    automatically available without manual DB intervention.
-    """
+    """Upserts assets from portfolio.json into the assets table."""
     portfolio_path: Path = db_path.parent / "portfolio.json"
     if not portfolio_path.exists():
         return
@@ -54,7 +54,6 @@ def _sync_assets_from_portfolio(cursor: Any, db_path: Path) -> None:
     with open(portfolio_path, encoding="utf-8") as f:
         portfolio: dict[str, Any] = json.load(f)
 
-    item: dict[str, Any]
     for item in portfolio.get("assets", []):
         isin: str | None = item.get("isin")
         yahoo_ticker: str = str(item.get("yahoo_ticker", ""))
@@ -100,19 +99,7 @@ def _sync_assets_from_portfolio(cursor: Any, db_path: Path) -> None:
 
 
 def save_snapshot(snapshot: dict[str, Any]) -> None:
-    """Persists a new portfolio snapshot directly to SQLite.
-
-    Resolves each asset by ISIN (primary) or yahoo_ticker (fallback) against the
-    assets table. Skips any asset not found with a warning. The snapshot date
-    is deduplicated — an existing entry for the same date is replaced.
-
-    Args:
-        snapshot: A dictionary with the structured portfolio snapshot payload
-            produced by the extractor agent.
-
-    Raises:
-        SystemExit: If the database write fails irrecoverably or data is invalid.
-    """
+    """Persists a new portfolio snapshot directly to SQLite."""
     settings: Any = get_settings()
     db_path: Path = settings.finance_db_file
 
@@ -124,12 +111,10 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
     breakdown: dict[str, Any] = snapshot.get("breakdown", {})
     stocks_eur: float = float(breakdown.get("stocks_eur", 0.0))
 
-    # Guard clause: Abort snapshot if essential portfolio data or stocks are missing/zero
     if total_market_value <= 0.0 or stocks_eur <= 0.0:
         logger.error(
             f"[snapshot] Aborting snapshot: Invalid or missing portfolio data detected "
-            f"(total_market_value_eur: €{total_market_value}, stocks_eur: €{stocks_eur}). "
-            "Ensure the XTB screenshot was successfully processed."
+            f"(total_market_value_eur: €{total_market_value}, stocks_eur: €{stocks_eur})."
         )
         sys.exit(1)
 
@@ -150,10 +135,8 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
             initialize_database(conn)
             cursor: Any = conn.cursor()
 
-            # Auto-sync assets from portfolio.json — new assets are inserted automatically
             _sync_assets_from_portfolio(cursor, db_path)
 
-            # Idempotent upsert — replace snapshot for this date if it already exists
             cursor.execute(
                 "DELETE FROM portfolio_snapshots WHERE timestamp LIKE ?",
                 (f"{snapshot_date}%",),
@@ -184,7 +167,6 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
                 snapshot.get("holdings") or snapshot.get("assets") or snapshot.get("asset") or []
             )
 
-            item: dict[str, Any]
             for item in assets_raw:
                 yahoo_ticker: str = str(item.get("yahoo_ticker") or item.get("ticker", ""))
                 isin: str | None = item.get("isin")
@@ -237,14 +219,8 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
 
 
 def push_to_gdrive() -> None:
-    """Backs up the SQLite database to Google Drive.
-
-    Uploads the current local database directly to Google Drive, overwriting
-    the existing 'finances.db' file to maintain a single up-to-date cloud version.
-    """
+    """Backs up the SQLite database to Google Drive."""
     try:
-        from core_lib.gdrive import GDriveService
-
         settings: Any = get_settings()
         db_path: Path = settings.finance_db_file
 
@@ -252,11 +228,7 @@ def push_to_gdrive() -> None:
             logger.warning("[snapshot] Database file not found — skipping GDrive backup.")
             return
 
-        drive: Any = GDriveService(
-            credentials_path="secrets/credentials.json",
-            token_path="secrets/token.json",
-            folder_id=settings.gdrive_snapshots_folder_id,
-        )
+        drive: Any = GDriveService(folder_id=settings.gdrive_snapshots_folder_id)
 
         file_id: str | None = drive.upload_file(
             file_path=db_path,
@@ -275,25 +247,16 @@ def push_to_gdrive() -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        logger.info("[snapshot] Usage: python scripts/run_snapshot.py <path_to_json_file>")
-        sys.exit(1)
+    logger.info("[snapshot] Starting automated XTB portfolio snapshot pipeline...")
 
-    input_path: Path = Path(sys.argv[1])
-    if not input_path.exists():
-        logger.error(f"[snapshot] File not found — {input_path}")
-        sys.exit(1)
+    # 1. Descarrega a screenshot da XTB diretamente da pasta do Google Drive
+    image_path = download_screenshot_from_gdrive()
 
-    try:
-        with open(input_path, encoding="utf-8") as f:
-            data: dict[str, Any] = json.load(f)
-    except json.JSONDecodeError as e:
-        logger.error(f"[snapshot] Invalid JSON — {e}")
-        sys.exit(1)
+    # 2. Executa a extração inteligente com a Gemini Vision API
+    snapshot_data = extract_data_from_screenshot(image_path)
 
-    save_snapshot(data)
+    # 3. Guarda os dados estruturados na base de dados SQLite local
+    save_snapshot(snapshot_data)
+
+    # 4. Faz o upload da base de dados atualizada para o Google Drive
     push_to_gdrive()
-
-    # Delete the ephemeral IPC file after successful processing
-    if input_path.name == ".temp_snapshot.json":
-        input_path.unlink(missing_ok=True)

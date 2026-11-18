@@ -10,17 +10,17 @@ from pathlib import Path
 from typing import Any, Protocol
 
 import pandas as pd
+from core_lib.logger import logger
 
 from config import (
     DATA_DIR,
     ETF_CACHE_FILE,
     get_settings,
 )
-from infra.database.connection import DEFAULT_DB_PATH, get_db_context
 from core.exceptions import StorageReadError, StorageWriteError
-from core.models import Asset, PortfolioSnapshot, ETFDetails, StockDetails, AssetSnapshot
+from core.models import Asset, AssetSnapshot, ETFDetails, PortfolioSnapshot, StockDetails
+from infra.database.connection import DEFAULT_DB_PATH, get_db_context
 from infra.database.schema import initialize_database
-from infra.logger import logger
 
 
 class PortfolioRepository(Protocol):
@@ -239,9 +239,7 @@ class SqliteHistoryRepository:
                         market_value_eur: float = float(a_row["value_eur"])
                         unrealized_pnl_eur: float = market_value_eur - invested_eur
                         unrealized_pnl_pct: float = (
-                            (unrealized_pnl_eur / invested_eur * 100.0)
-                            if invested_eur > 0
-                            else 0.0
+                            (unrealized_pnl_eur / invested_eur * 100.0) if invested_eur > 0 else 0.0
                         )
                         current_allocation_pct: float = (
                             (market_value_eur / total_market_value * 100.0)
@@ -334,7 +332,9 @@ class SqliteHistoryRepository:
                     ),
                 )
                 if cursor.lastrowid is None:
-                    raise StorageWriteError("[repositories] Failed to retrieve inserted snapshot ID.")
+                    raise StorageWriteError(
+                        "[repositories] Failed to retrieve inserted snapshot ID."
+                    )
                 snapshot_id: int = cursor.lastrowid
 
                 for asset_snap in snapshot.assets_snapshot:
@@ -451,7 +451,9 @@ class JsonPortfolioRepository:
             A list of Asset instances.
         """
         if not self.file_path.exists():
-            raise StorageReadError(f"[repositories] Portfolio file not found at '{self.file_path}'.")
+            raise StorageReadError(
+                f"[repositories] Portfolio file not found at '{self.file_path}'."
+            )
 
         try:
             with open(self.file_path, encoding="utf-8") as f:
@@ -527,9 +529,7 @@ class JsonETFCacheRepository:
             ttl_days: Cache Time-To-Live in days.
         """
         self.file_path: Path = Path(file_path)
-        self.ttl_days: int = (
-            ttl_days if ttl_days is not None else get_settings().etf_cache_ttl_days
-        )
+        self.ttl_days: int = ttl_days if ttl_days is not None else get_settings().etf_cache_ttl_days
 
     def get_etf_details(self, isin: str) -> ETFDetails | None:
         """Retrieves cached ETF details for an ISIN if unexpired and valid.
@@ -578,7 +578,9 @@ class JsonETFCacheRepository:
 
             return ETFDetails.from_dict(raw_details)
         except (ValueError, KeyError, TypeError, AttributeError) as e:
-            logger.warning(f"[repositories] Failed to parse cached ETF details for ISIN {isin}: {e}")
+            logger.warning(
+                f"[repositories] Failed to parse cached ETF details for ISIN {isin}: {e}"
+            )
             return None
 
     def save_etf_details(self, isin: str, details: ETFDetails) -> None:
@@ -679,9 +681,7 @@ class SqliteOpportunityRepository:
                     ),
                 )
 
-                cursor.execute(
-                    "SELECT id FROM opportunities WHERE timestamp = ?", (timestamp,)
-                )
+                cursor.execute("SELECT id FROM opportunities WHERE timestamp = ?", (timestamp,))
                 row = cursor.fetchone()
                 if not row:
                     return
@@ -693,9 +693,7 @@ class SqliteOpportunityRepository:
                     rec = recommendations_map.get(symbol)
 
                     adv_dict = (advisories_map or {}).get(symbol)
-                    advisory_json_str: str | None = (
-                        json.dumps(adv_dict) if adv_dict else None
-                    )
+                    advisory_json_str: str | None = json.dumps(adv_dict) if adv_dict else None
 
                     cursor.execute(
                         """
@@ -725,11 +723,7 @@ class SqliteOpportunityRepository:
                             float(score.allocation_score),
                             float(score.total_score),
                             (str(rec.action.value) if rec and rec.action else None),
-                            (
-                                str(rec.urgency_level.value)
-                                if rec and rec.urgency_level
-                                else None
-                            ),
+                            (str(rec.urgency_level.value) if rec and rec.urgency_level else None),
                             (float(rec.confidence_score * 100.0) if rec else None),
                             target_item.get("forward_pe"),
                             target_item.get("trailing_pe"),
@@ -1029,14 +1023,10 @@ class SqliteOpportunityRepository:
             [h.to_dict() for h in details.holdings] if details.holdings else []
         )
         sector_data: list[dict[str, Any]] = (
-            [s.to_dict() for s in details.sector_breakdown]
-            if details.sector_breakdown
-            else []
+            [s.to_dict() for s in details.sector_breakdown] if details.sector_breakdown else []
         )
         country_data: list[dict[str, Any]] = (
-            [c.to_dict() for c in details.country_breakdown]
-            if details.country_breakdown
-            else []
+            [c.to_dict() for c in details.country_breakdown] if details.country_breakdown else []
         )
 
         params: tuple[Any, ...] = (

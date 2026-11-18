@@ -7,20 +7,21 @@ supporting safe parsing, serialization, and historical metrics tracking.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, Field
 from common.constants import COUNTRY_ALIASES
-
+from pydantic import BaseModel, Field
 
 # =====================================================================
 # Shared Parsing Helpers & Mixins (DRY Principles)
 # =====================================================================
 
+
 class DictAccessMixin:
     """Mixin providing dictionary-like item access (__getitem__) to dataclasses."""
+
     __slots__ = ()
 
     def __getitem__(self, key: str) -> Any:
@@ -58,6 +59,7 @@ def _get_str(data: dict[str, Any], key: str, default: str | None = None) -> str 
 # Domain Models
 # =====================================================================
 
+
 @dataclass(frozen=True, slots=True)
 class Quotation(DictAccessMixin):
     """Represents a market quotation and pricing details for a specific ticker at a point in time.
@@ -72,7 +74,7 @@ class Quotation(DictAccessMixin):
 
     price: float
     currency: str
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     native_price: float | None = None
     native_currency: str | None = None
 
@@ -119,14 +121,18 @@ class Asset(DictAccessMixin):
         raw_type: str = str(data.get("asset_type") or data.get("type") or "STOCK").upper()
         resolved_yahoo = str(data.get("yahoo_ticker") or data.get("symbol", ""))
         resolved_just_etf = _get_str(data, "just_etf_ticker") or _get_str(data, "just_etf")
-        resolved_currency = str(data.get("native_currency") or data.get("currency") or "EUR").upper()
+        resolved_currency = str(
+            data.get("native_currency") or data.get("currency") or "EUR"
+        ).upper()
 
         return cls(
             name=str(data.get("name", "")),
             isin=str(data.get("isin", "")),
             yahoo_ticker=resolved_yahoo,
             quantity=float(data.get("quantity", 0.0)),
-            average_buy_price=float(data.get("averageBuyPrice", data.get("average_buy_price", 0.0))),
+            average_buy_price=float(
+                data.get("averageBuyPrice", data.get("average_buy_price", 0.0))
+            ),
             asset_type=raw_type,
             xtb_name=_get_str(data, "xtb_name"),
             xtb_ticker=_get_str(data, "xtb_ticker"),
@@ -265,17 +271,25 @@ class PortfolioSnapshot(DictAccessMixin):
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> PortfolioSnapshot:
         if "date" not in data or not data["date"]:
-            raise ValueError("[models] Portfolio snapshot violates contract: mandatory property 'date' is missing.")
+            raise ValueError(
+                "[models] Portfolio snapshot violates contract: mandatory property 'date' is missing."
+            )
 
         if not any(k in data for k in ("holdings", "assets_snapshot", "asset")):
             raise KeyError("[models] Portfolio snapshot violates contract: missing holdings key.")
 
-        raw_market_val = _get_float(data, "total_market_value_eur") or _get_float(data, "total_value_eur") or 0.0
-        raw_holdings = data.get("holdings") or data.get("assets_snapshot") or data.get("asset") or []
+        raw_market_val = (
+            _get_float(data, "total_market_value_eur") or _get_float(data, "total_value_eur") or 0.0
+        )
+        raw_holdings = (
+            data.get("holdings") or data.get("assets_snapshot") or data.get("asset") or []
+        )
         if not isinstance(raw_holdings, list):
             raw_holdings = []
 
-        parsed_holdings = [AssetSnapshot.from_dict(item) for item in raw_holdings if isinstance(item, dict)]
+        parsed_holdings = [
+            AssetSnapshot.from_dict(item) for item in raw_holdings if isinstance(item, dict)
+        ]
 
         return cls(
             date=str(data["date"]),
@@ -288,6 +302,9 @@ class PortfolioSnapshot(DictAccessMixin):
             breakdown=dict(data.get("breakdown", {})),
             holdings=parsed_holdings,
         )
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
 
 
 @dataclass(frozen=True, slots=True)
@@ -468,9 +485,21 @@ class ETFDetails(DictAccessMixin):
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ETFDetails:
         return cls(
-            holdings=[Holding.from_dict(item) for item in data.get("holdings", []) if isinstance(item, dict)],
-            sector_breakdown=[SectorExposure.from_dict(item) for item in data.get("sector_breakdown", []) if isinstance(item, dict)],
-            country_breakdown=[CountryExposure.from_dict(item) for item in data.get("country_breakdown", []) if isinstance(item, dict)],
+            holdings=[
+                Holding.from_dict(item)
+                for item in data.get("holdings", [])
+                if isinstance(item, dict)
+            ],
+            sector_breakdown=[
+                SectorExposure.from_dict(item)
+                for item in data.get("sector_breakdown", [])
+                if isinstance(item, dict)
+            ],
+            country_breakdown=[
+                CountryExposure.from_dict(item)
+                for item in data.get("country_breakdown", [])
+                if isinstance(item, dict)
+            ],
             ter_pct=_get_float(data, "ter_pct"),
             inception_date=_get_str(data, "inception_date"),
             fund_size_eur_m=_get_float(data, "fund_size_eur_m"),
@@ -660,11 +689,13 @@ class AssetTimeSeries(DictAccessMixin):
 
         parsed_values = [
             TimeSeriesPoint.from_dict(item) if isinstance(item, dict) else item
-            for item in raw_values if isinstance(item, (dict, TimeSeriesPoint))
+            for item in raw_values
+            if isinstance(item, (dict, TimeSeriesPoint))
         ]
         parsed_quantities = [
             TimeSeriesPoint.from_dict(item) if isinstance(item, dict) else item
-            for item in raw_quantities if isinstance(item, (dict, TimeSeriesPoint))
+            for item in raw_quantities
+            if isinstance(item, (dict, TimeSeriesPoint))
         ]
 
         return cls(
@@ -692,11 +723,13 @@ class AssetClassTimeSeries(DictAccessMixin):
 
         parsed_values = [
             TimeSeriesPoint.from_dict(item) if isinstance(item, dict) else item
-            for item in raw_values if isinstance(item, (dict, TimeSeriesPoint))
+            for item in raw_values
+            if isinstance(item, (dict, TimeSeriesPoint))
         ]
         parsed_shares = [
             TimeSeriesPoint.from_dict(item) if isinstance(item, dict) else item
-            for item in raw_shares if isinstance(item, (dict, TimeSeriesPoint))
+            for item in raw_shares
+            if isinstance(item, (dict, TimeSeriesPoint))
         ]
 
         return cls(
@@ -724,7 +757,9 @@ class PortfolioTimeSeries(DictAccessMixin):
         return cls(
             value_history=[TimeSeriesPoint.from_dict(i) for i in raw_values if isinstance(i, dict)],
             ath_history=[TimeSeriesPoint.from_dict(i) for i in raw_ath if isinstance(i, dict)],
-            drawdown_history=[TimeSeriesPoint.from_dict(i) for i in raw_drawdowns if isinstance(i, dict)],
+            drawdown_history=[
+                TimeSeriesPoint.from_dict(i) for i in raw_drawdowns if isinstance(i, dict)
+            ],
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -789,9 +824,21 @@ class DashboardOverview(DictAccessMixin):
 
         return cls(
             portfolio_history=portfolio_history,
-            asset_series=[AssetTimeSeries.from_dict(i) for i in data.get("asset_series", []) if isinstance(i, dict)],
-            class_series=[AssetClassTimeSeries.from_dict(i) for i in data.get("class_series", []) if isinstance(i, dict)],
-            asset_summaries=[AssetPerformanceSummary.from_dict(i) for i in data.get("asset_summaries", []) if isinstance(i, dict)],
+            asset_series=[
+                AssetTimeSeries.from_dict(i)
+                for i in data.get("asset_series", [])
+                if isinstance(i, dict)
+            ],
+            class_series=[
+                AssetClassTimeSeries.from_dict(i)
+                for i in data.get("class_series", [])
+                if isinstance(i, dict)
+            ],
+            asset_summaries=[
+                AssetPerformanceSummary.from_dict(i)
+                for i in data.get("asset_summaries", [])
+                if isinstance(i, dict)
+            ],
             top_growth_contributor=_get_str(data, "top_growth_contributor"),
             max_drawdown_percent=_get_float(data, "max_drawdown_percent", 0.0) or 0.0,
         )
@@ -818,11 +865,11 @@ class GrowthMilestone(DictAccessMixin):
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> GrowthMilestone:
         return cls(
-            year=_get_int(data, "year", 0),
-            total_invested=_get_float(data, "total_invested", 0.0),
-            compound_interest=_get_float(data, "compound_interest", 0.0),
-            projected_value=_get_float(data, "projected_value", 0.0),
-            inflation_adjusted_value=_get_float(data, "inflation_adjusted_value", 0.0),
+            year=_get_int(data, "year", 0) or 0,
+            total_invested=_get_float(data, "total_invested", 0.0) or 0.0,
+            compound_interest=_get_float(data, "compound_interest", 0.0) or 0.0,
+            projected_value=_get_float(data, "projected_value", 0.0) or 0.0,
+            inflation_adjusted_value=_get_float(data, "inflation_adjusted_value", 0.0) or 0.0,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -840,7 +887,9 @@ class GrowthProjectionScenario(DictAccessMixin):
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> GrowthProjectionScenario:
         raw_progression = data.get("progression", [])
-        progression = [GrowthMilestone.from_dict(item) for item in raw_progression if isinstance(item, dict)]
+        progression = [
+            GrowthMilestone.from_dict(item) for item in raw_progression if isinstance(item, dict)
+        ]
 
         raw_milestones = data.get("milestones", {})
         milestones: dict[int, GrowthMilestone] = {}
@@ -855,8 +904,8 @@ class GrowthProjectionScenario(DictAccessMixin):
 
         return cls(
             name=_get_str(data, "name") or "",
-            annual_return_pct=_get_float(data, "annual_return_pct", 0.0),
-            monthly_contribution=_get_float(data, "monthly_contribution", 0.0),
+            annual_return_pct=_get_float(data, "annual_return_pct", 0.0) or 0.0,
+            monthly_contribution=_get_float(data, "monthly_contribution", 0.0) or 0.0,
             progression=progression,
             milestones=milestones,
         )
@@ -892,7 +941,11 @@ class GrowthProjectionResult(DictAccessMixin):
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> GrowthProjectionResult:
         raw_scenarios = data.get("scenarios", [])
-        scenarios = [GrowthProjectionScenario.from_dict(item) for item in raw_scenarios if isinstance(item, dict)]
+        scenarios = [
+            GrowthProjectionScenario.from_dict(item)
+            for item in raw_scenarios
+            if isinstance(item, dict)
+        ]
 
         raw_primary = data.get("primary_scenario")
         primary_scenario = (
@@ -902,8 +955,8 @@ class GrowthProjectionResult(DictAccessMixin):
         )
 
         return cls(
-            initial_value=_get_float(data, "initial_value", 0.0),
-            monthly_contribution=_get_float(data, "monthly_contribution", 0.0),
+            initial_value=_get_float(data, "initial_value", 0.0) or 0.0,
+            monthly_contribution=_get_float(data, "monthly_contribution", 0.0) or 0.0,
             scenarios=scenarios,
             historical_cagr_pct=_get_float(data, "historical_cagr_pct"),
             primary_scenario=primary_scenario,

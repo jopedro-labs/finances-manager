@@ -5,10 +5,10 @@ from __future__ import annotations
 import sys
 from typing import Any
 
-import yfinance as yf  # type: ignore[import-untyped]
+import yfinance as yf
+from core_lib.logger import logger
 
 from core.exceptions import ExchangeRateFetchError
-from infra.logger import logger
 
 
 def get_exchange_rate(from_currency: str, to_currency: str = "EUR") -> float | None:

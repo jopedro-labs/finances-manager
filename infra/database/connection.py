@@ -56,7 +56,7 @@ def get_connection(
 def get_db_context(
     db_path: Path | str | None = None,
     timeout: float = DEFAULT_CONNECT_TIMEOUT_SEC,
-) -> Generator[sqlite3.Connection, None, None]:
+) -> Generator[sqlite3.Connection]:
     """Context manager providing transactional SQLite connection handling.
     Automatically commits changes on successful execution or rolls back on exception,
     guaranteeing connection closure in all scenarios. Note: DDL statements (CREATE TABLE,

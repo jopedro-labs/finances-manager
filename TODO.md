@@ -4,7 +4,7 @@
 
 ## Fase 1 — Correcções críticas (bloqueantes) ✓
 
-- [x] **`scripts/extract_with_gemini.py`** — corrigir field names: `ticker` → `yahoo_ticker`, `currency` → `native_currency` (quebra silenciosa no pipeline de snapshot)
+- [x] **`scripts/extract_xtb_open_positions.py`** — corrigir field names: `ticker` → `yahoo_ticker`, `currency` → `native_currency` (quebra silenciosa no pipeline de snapshot)
 - [x] **`data/portfolio_targets.json`** — corrigir alocações para somarem exactamente 100% (actualmente ~97%, distorce o gap score)
 - [x] **`core/analysis.py`** — corrigir threshold ETF Tier A: `age_years <= 3.0` → `age_years <= 5.0` (alinhamento com rules.md)
 - [x] **`data/rules.md`** — corrigir fórmula FV_pmt: remover `× (1 + r_monthly)` (anuidade postecipada, alinhamento com código)

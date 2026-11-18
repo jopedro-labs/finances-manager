@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from core.models import GrowthProjectionScenario, GrowthMilestone
+from core.models import GrowthMilestone, GrowthProjectionScenario
 from infra.database.finance_sql_extraction import FinanceSQLExtractor
 
 
@@ -149,12 +149,8 @@ class ProjectionEngine:
 
         try:
             # Parse dates to calculate real duration in years (as a fraction)
-            start_date = datetime.fromisoformat(
-                valid_history[0].snapshot_date.replace(" ", "T")
-            )
-            end_date = datetime.fromisoformat(
-                valid_history[-1].snapshot_date.replace(" ", "T")
-            )
+            start_date = datetime.fromisoformat(valid_history[0].snapshot_date.replace(" ", "T"))
+            end_date = datetime.fromisoformat(valid_history[-1].snapshot_date.replace(" ", "T"))
 
             duration_seconds = (end_date - start_date).total_seconds()
             # If duration is less than 1 hour, return 0

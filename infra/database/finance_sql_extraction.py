@@ -83,9 +83,7 @@ class FinanceSQLExtractor:
         return self._db_path
 
     @staticmethod
-    def _get_column_name(
-        cursor: sqlite3.Cursor, table: str, candidates: list[str]
-    ) -> str:
+    def _get_column_name(cursor: sqlite3.Cursor, table: str, candidates: list[str]) -> str:
         """Resolves the first existing column name from a list of candidates.
 
         Args:
@@ -104,9 +102,7 @@ class FinanceSQLExtractor:
         for candidate in candidates:
             if candidate in existing_cols:
                 return candidate
-        raise ValueError(
-            f"None of the candidate columns {candidates} exist in table '{table}'."
-        )
+        raise ValueError(f"None of the candidate columns {candidates} exist in table '{table}'.")
 
     @staticmethod
     def _get_table_name(cursor: sqlite3.Cursor, candidates: list[str]) -> str:
@@ -122,16 +118,12 @@ class FinanceSQLExtractor:
         Raises:
             ValueError: If none of the candidate tables exist in the database.
         """
-        cursor.execute(
-            "SELECT name FROM sqlite_master WHERE type='table';"
-        )
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         existing_tables: set[str] = {row[0] for row in cursor.fetchall()}
         for candidate in candidates:
             if candidate in existing_tables:
                 return candidate
-        raise ValueError(
-            f"None of the candidate tables {candidates} exist in the database."
-        )
+        raise ValueError(f"None of the candidate tables {candidates} exist in the database.")
 
     @staticmethod
     def _safe_col(value: str, allowed: frozenset[str]) -> str:
@@ -148,9 +140,7 @@ class FinanceSQLExtractor:
             ValueError: If the value is not in the allowed set.
         """
         if value not in allowed:
-            raise ValueError(
-                f"Column name '{value}' is not in the allowed list: {allowed}."
-            )
+            raise ValueError(f"Column name '{value}' is not in the allowed list: {allowed}.")
         return value
 
     @staticmethod
@@ -186,9 +176,7 @@ class FinanceSQLExtractor:
         cursor.execute("PRAGMA table_info(asset_snapshots);")  # nosec B608
         ast_cols: set[str] = {row[1] for row in cursor.fetchall()}
         price_expr = "ast.native_price" if "native_price" in ast_cols else "0.0"
-        currency_expr = (
-            "ast.native_currency" if "native_currency" in ast_cols else "'EUR'"
-        )
+        currency_expr = "ast.native_currency" if "native_currency" in ast_cols else "'EUR'"
         return price_expr, currency_expr
 
     def fetch_asset_history(self) -> list[AssetHistoricalRecord]:
@@ -212,9 +200,7 @@ class FinanceSQLExtractor:
             with get_db_context(self._db_path) as conn:
                 cursor: sqlite3.Cursor = conn.cursor()
 
-                snapshot_table: str = self._get_table_name(
-                    cursor, _SNAPSHOT_TABLE_CANDIDATES
-                )
+                snapshot_table: str = self._get_table_name(cursor, _SNAPSHOT_TABLE_CANDIDATES)
                 date_col: str = self._safe_col(
                     self._get_column_name(cursor, snapshot_table, ["date", "timestamp"]),
                     _ALLOWED_DATE_COLS,
@@ -284,9 +270,7 @@ class FinanceSQLExtractor:
             with get_db_context(self._db_path) as conn:
                 cursor: sqlite3.Cursor = conn.cursor()
 
-                snapshot_table: str = self._get_table_name(
-                    cursor, _SNAPSHOT_TABLE_CANDIDATES
-                )
+                snapshot_table: str = self._get_table_name(cursor, _SNAPSHOT_TABLE_CANDIDATES)
                 date_col: str = self._safe_col(
                     self._get_column_name(cursor, snapshot_table, ["date", "timestamp"]),
                     _ALLOWED_DATE_COLS,
@@ -300,9 +284,7 @@ class FinanceSQLExtractor:
                 has_baseline: bool = "is_baseline" in snap_cols
                 has_quantity: bool = "quantity" in asset_cols
 
-                baseline_clause: str = (
-                    "COALESCE(s.is_baseline, 0) = 1" if has_baseline else "0 = 1"
-                )
+                baseline_clause: str = "COALESCE(s.is_baseline, 0) = 1" if has_baseline else "0 = 1"
                 active_filter: str = " AND quantity > 0" if has_quantity else ""
 
                 total_value_col: str = (

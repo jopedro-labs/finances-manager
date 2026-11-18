@@ -4,24 +4,23 @@ combining real-time market data from yfinance and fundamental metadata.
 
 from __future__ import annotations
 
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Protocol
 
 import yfinance as yf
+from core_lib.logger import logger
 
 from config import get_settings
-from infra.database.connection import DEFAULT_DB_PATH
 from core.currency_exchange import get_exchange_rate
-from core.models import Asset, Quotation, StockDetails, ETFDetails, ETFMarketData
+from core.models import Asset, ETFDetails, ETFMarketData, Quotation, StockDetails
 from core.repositories import (
-    SqliteOpportunityRepository,
     ETFCacheRepository,
     JsonETFCacheRepository,
+    SqliteOpportunityRepository,
 )
-from infra.database.connection import get_db_context
+from infra.database.connection import DEFAULT_DB_PATH, get_db_context
 from infra.database.schema import initialize_database
-from infra.logger import logger
 
 
 class AssetDataProvider(Protocol):
@@ -51,7 +50,9 @@ class StockProvider:
             A Quotation object containing normalized pricing details, or None on failure.
         """
         if not asset.yahoo_ticker:
-            logger.error(f"[data collectors] No Yahoo ticker provided for stock asset '{asset.name}'.")
+            logger.error(
+                f"[data collectors] No Yahoo ticker provided for stock asset '{asset.name}'."
+            )
             return None
 
         try:
@@ -88,11 +89,15 @@ class StockProvider:
                     native_currency=native_currency,
                 )
 
-            logger.error(f"[data collectors] Could not retrieve price for ticker '{asset.yahoo_ticker}'.")
+            logger.error(
+                f"[data collectors] Could not retrieve price for ticker '{asset.yahoo_ticker}'."
+            )
             return None
 
         except Exception as e:
-            logger.error(f"[data collectors] Error fetching quotation for '{asset.yahoo_ticker}': {e}")
+            logger.error(
+                f"[data collectors] Error fetching quotation for '{asset.yahoo_ticker}': {e}"
+            )
             return None
 
     @staticmethod
@@ -165,7 +170,9 @@ class StockProvider:
             A StockDetails instance containing fundamental metrics, or None on failure.
         """
         if not asset.yahoo_ticker:
-            logger.error(f"[data collectors] No Yahoo ticker provided for stock asset '{asset.name}'.")
+            logger.error(
+                f"[data collectors] No Yahoo ticker provided for stock asset '{asset.name}'."
+            )
             return None
 
         cache_repo: SqliteOpportunityRepository | None = None
@@ -214,9 +221,9 @@ class StockProvider:
                 )
                 return None
 
-            dividend_rate: float | None = self._parse_float(info, "dividendRate") or self._parse_float(
-                info, "trailingAnnualDividendRate"
-            )
+            dividend_rate: float | None = self._parse_float(
+                info, "dividendRate"
+            ) or self._parse_float(info, "trailingAnnualDividendRate")
             current_price: float | None = (
                 self._parse_float(info, "currentPrice")
                 or self._parse_float(info, "previousClose")
@@ -224,11 +231,7 @@ class StockProvider:
             )
 
             dividend_yield_pct: float | None = None
-            if (
-                dividend_rate is not None
-                and current_price is not None
-                and current_price > 0
-            ):
+            if dividend_rate is not None and current_price is not None and current_price > 0:
                 dividend_yield_pct = round((dividend_rate / current_price) * 100.0, 4)
             else:
                 raw_div: float | None = self._parse_float(info, "dividendYield")
@@ -373,7 +376,9 @@ class ETFProvider:
             An ETFMarketData instance with pricing and volume metrics, or None on failure.
         """
         if not asset.yahoo_ticker:
-            logger.error(f"[data collectors] No Yahoo ticker provided for ETF asset '{asset.name}'.")
+            logger.error(
+                f"[data collectors] No Yahoo ticker provided for ETF asset '{asset.name}'."
+            )
             return None
         try:
             info: dict[str, Any] = yf.Ticker(asset.yahoo_ticker).info
@@ -386,9 +391,7 @@ class ETFProvider:
                 or self._yf_float(info, "previousClose")
             )
             currency: str | None = (
-                str(info.get("currency", "EUR")).upper()
-                if info.get("currency")
-                else None
+                str(info.get("currency", "EUR")).upper() if info.get("currency") else None
             )
 
             return ETFMarketData(
@@ -467,9 +470,7 @@ class ETFProvider:
                 )
 
         if not force_refresh:
-            cached_details: ETFDetails | None = self.cache_repo.get_etf_details(
-                asset.isin
-            )
+            cached_details: ETFDetails | None = self.cache_repo.get_etf_details(asset.isin)
             if cached_details is not None:
                 return cached_details
 

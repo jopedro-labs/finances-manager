@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from core_lib.gdrive.gdrive_service import GDriveService
-from config import get_settings, DATA_DIR
+from core_lib.logger import logger
+
+from config import DATA_DIR, get_settings
 
 settings = get_settings()
 
@@ -13,7 +13,9 @@ settings = get_settings()
 def sync_json_files() -> None:
     """Synchronizes all JSON cache and configuration files with Google Drive storage."""
     folder_id = settings.gdrive_data_folder_id
-    logger.info(f"[gdrive jsons sync] Starting JSON configuration sync with Google Drive folder: {folder_id}")
+    logger.info(
+        f"[gdrive jsons sync] Starting JSON configuration sync with Google Drive folder: {folder_id}"
+    )
 
     service = GDriveService(folder_id=folder_id)
     if not service.authenticate():

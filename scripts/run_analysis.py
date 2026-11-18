@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from core_lib.logger import logger
+
 from core.analysis import analyze_overall_performance
 from infra.database.connection import DEFAULT_DB_PATH, get_db_context
 from infra.database.schema import initialize_database

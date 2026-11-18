@@ -10,11 +10,12 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import pandas as pd
+from core_lib.logger import logger
 
+from core.data_collectors import ETFProvider, StockProvider
 from core.exceptions import StorageError
 from core.exposure import ExposureEngine
 from core.models import Asset, ETFDetails, PortfolioSnapshot, StockDetails
-from core.data_collectors import ETFProvider, StockProvider
 from core.repositories import (
     HistoryRepository,
     PortfolioRepository,
@@ -22,7 +23,6 @@ from core.repositories import (
     SqlitePortfolioRepository,
 )
 from infra.database.connection import DEFAULT_DB_PATH
-from infra.logger import logger
 
 
 @dataclass
@@ -111,7 +111,9 @@ def analyze_overall_performance(
         return
 
     latest_asset_values: dict[str, float] = {
-        asset.isin: asset.market_value_eur for asset in latest_snapshot.assets_snapshot if asset.isin
+        asset.isin: asset.market_value_eur
+        for asset in latest_snapshot.assets_snapshot
+        if asset.isin
     }
 
     performance_records: list[dict[str, Any]] = []
@@ -350,10 +352,7 @@ def evaluate_etf_quality(
         if aum_eur is not None and aum_eur < 100_000_000.0:
             is_tier_c = True
 
-        if is_tier_c:
-            tier = "Tier C"
-        else:
-            tier = "Tier B"
+        tier = "Tier C" if is_tier_c else "Tier B"
 
     ter_str: str = f"{ter:.2f}%" if ter is not None else "N/A"
     aum_str: str = f"{aum_eur / 1e6:,.1f}M€" if aum_eur is not None else "N/A"

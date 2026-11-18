@@ -28,7 +28,7 @@ make report             → analyst → reporter → HTML/MD report
 | `data/rules.md`                        | Business rules: scoring, decision matrix, projections, governance protocol           |
 | `infra/logger.py`                      | Structured logger for consistent terminal/file output with contextual prefixes       |
 | `infra/utils/file_utils.py`            | Safe text file loading utility with error handling and encoding fallback             |
-| `scripts/extract_with_gemini.py`       | Extracts positions from XTB screenshot via Gemini Vision → triggers snapshot.py      |
+| `scripts/extract_xtb_open_positions.py`       | Extracts positions from XTB screenshot via Gemini Vision → triggers snapshot.py      |
 | `scripts/run_snapshot.py`                  | Reads temp JSON → appends snapshots.json → syncs to GDrive                           |
 | `scripts/generate_portfolio_report.py` | Calls Gemini with analyst + reporter instructions → saves report to reports/         |
 | `reports/`                             | Generated reports (gitignored) — YYYY-MM-DD.md or YYYY-MM-DD.html                    |

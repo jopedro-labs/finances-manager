@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from core_lib.logger import logger
+
 from core.portfolio_analytics import PortfolioAnalyticsEngine
 from infra.database.connection import DEFAULT_DB_PATH, get_db_context
 from infra.database.finance_sql_extraction import FinanceSQLExtractor
 from infra.database.schema import initialize_database
-from infra.logger import logger
 
 
 def main() -> None:
@@ -26,7 +27,9 @@ def main() -> None:
     engine = PortfolioAnalyticsEngine()
     overview = engine.build_dashboard_overview(asset_history, portfolio_history)
 
-    logger.info(f"[run dashboard] Total history points recorded: {len(overview.portfolio_history.value_history)}")
+    logger.info(
+        f"[run dashboard] Total history points recorded: {len(overview.portfolio_history.value_history)}"
+    )
     logger.info(f"[run dashboard] Maximum portfolio drawdown: {overview.max_drawdown_percent:.2f}%")
     logger.success("[run dashboard] Dashboard metrics computed successfully.")
 

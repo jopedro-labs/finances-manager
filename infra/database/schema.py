@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import sqlite3
 
-from infra.logger import logger
+from core_lib.logger import logger
 
 _ALLOWED_MIGRATION_TABLES: frozenset[str] = frozenset(
     {"stock_fundamental_history", "etf_fundamental_history"}
@@ -225,7 +225,9 @@ def create_tables(conn: sqlite3.Connection) -> None:
             cursor.execute(index_sql)
 
         conn.commit()
-        logger.success("[schema] All database tables and performance indexes were successfully initialized.")
+        logger.success(
+            "[schema] All database tables and performance indexes were successfully initialized."
+        )
     except sqlite3.Error as e:
         conn.rollback()
         logger.error(f"[schema] Failed to initialize database schema: {e}")
@@ -286,13 +288,17 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
 
                 try:
                     cursor.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type};")  # nosec B608
-                    logger.success(f"[schema] Successfully added column '{column}' to table '{table}'.")
+                    logger.success(
+                        f"[schema] Successfully added column '{column}' to table '{table}'."
+                    )
                 except sqlite3.OperationalError as e:
                     if "duplicate column name" not in str(e).lower():
                         raise
 
         conn.commit()
-        logger.success("[schema] All database schema migrations were successfully verified and applied.")
+        logger.success(
+            "[schema] All database schema migrations were successfully verified and applied."
+        )
     except Exception as e:
         conn.rollback()
         logger.error(f"[schema] Failed to apply database migrations: {e}")

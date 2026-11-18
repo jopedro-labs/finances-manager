@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     gdrive_token_file: Path = Field(default=SECRETS_DIR / "token.json", alias="GDRIVE_TOKEN_FILE")
     gdrive_data_folder_id: str | None = Field(default=None, alias="GDRIVE_DATA_FOLDER_ID")
     gdrive_snapshots_folder_id: str | None = Field(default=None, alias="GDRIVE_SNAPSHOTS_FOLDER_ID")
+    gdrive_xtb_open_positions_folder_id: str | None = Field(default=None, alias="GDRIVE_XTB_OPEN_POSITIONS_FOLDER_ID")
 
     # Cache Settings
     etf_cache_ttl_days: int = Field(default=30, alias="ETF_CACHE_TTL_DAYS")
@@ -50,19 +51,26 @@ class Settings(BaseSettings):
     # Exposure Policy Limits
     max_country_allocation_pct: float = Field(default=60.0, alias="MAX_COUNTRY_ALLOCATION_PCT")
     max_tech_allocation_pct: float = Field(default=50.0, alias="MAX_TECH_ALLOCATION_PCT")
-    max_other_sector_allocation_pct: float = Field(default=15.0, alias="MAX_OTHER_SECTOR_ALLOCATION_PCT")
+    max_other_sector_allocation_pct: float = Field(
+        default=15.0, alias="MAX_OTHER_SECTOR_ALLOCATION_PCT"
+    )
     max_company_allocation_pct: float = Field(default=15.0, alias="MAX_COMPANY_ALLOCATION_PCT")
 
     # Exposure Penalty Settings
-    exposure_sector_penalty_weight: float = Field(default=0.30, alias="EXPOSURE_SECTOR_PENALTY_WEIGHT")
-    exposure_country_penalty_weight: float = Field(default=0.20, alias="EXPOSURE_COUNTRY_PENALTY_WEIGHT")
+    exposure_sector_penalty_weight: float = Field(
+        default=0.30, alias="EXPOSURE_SECTOR_PENALTY_WEIGHT"
+    )
+    exposure_country_penalty_weight: float = Field(
+        default=0.20, alias="EXPOSURE_COUNTRY_PENALTY_WEIGHT"
+    )
 
     @field_validator("gdrive_data_folder_id", "gdrive_snapshots_folder_id")
     @classmethod
     def validate_folder_ids(cls, v: str | None) -> str | None:
-        from infra.gdrive.gdrive_helpers import sanitize_gdrive_folder_id
+        from core_lib.gdrive.gdrive_helpers import sanitize_gdrive_folder_id
 
-        return sanitize_gdrive_folder_id(v)
+        result: str | None = sanitize_gdrive_folder_id(v)
+        return result
 
     def model_post_init(self, __context: object, /) -> None:
         """

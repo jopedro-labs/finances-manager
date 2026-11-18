@@ -25,8 +25,9 @@ help:
 	@echo "  make security         - Run bandit security scan"
 
 snapshot:
-	@echo "Processing XTB screenshot with Gemini Vision..."
-	@$(PYTHON) scripts/extract_with_gemini.py
+	@echo "[make snapshot] Step 1: Pulling latest database from Google Drive..."
+	@$(PYTHON) scripts/gdrive_db_sync.py --pull
+	@echo "[make snapshot] Step 2: Running automated XTB screenshot extraction, saving snapshot & pushing to GDrive..."
 	@$(PYTHON) scripts/run_snapshot.py
 
 analysis:
@@ -71,19 +72,26 @@ report-md:
 	@$(PYTHON) scripts/generate_portfolio_report.py md
 
 clean:
-	@rm -rf reports/
+	@rm -rf reports/ build/ dist/ *.egg-info
 	@rm -f data/.temp_snapshot.json
-	@echo "Temporary files cleaned."
+	@echo "[make clean] Temporary files and build artifacts cleaned."
 
 lint:
-	@echo "Running ruff lint..."
+	@echo "[make lint] Running ruff lint..."
 	@$(RUFF) check .
-	@echo "Running ruff format check..."
+	@echo "[make lint] Running ruff format check..."
 	@$(RUFF) format --check .
-	@echo "Running mypy..."
+	@echo "[make lint] Running mypy..."
 	@$(MYPY) .
+
+format:
+	@echo "Formatting code with ruff..."
+	@$(RUFF) format .
 
 security:
 	@echo "Running bandit security scan..."
 	@$(BANDIT) -r config.py infra/ scripts/ -ll || true
-```[cite: 20]
+
+mypy:
+	@echo "Running mypy type checking..."
+	@$(MYPY) .

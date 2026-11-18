@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-import os
+import argparse
 from pathlib import Path
 
 from core_lib.gdrive.gdrive_service import GDriveService
-from config import get_settings, DATA_DIR
+from core_lib.logger import logger
+
+from config import get_settings
 from infra.database.connection import DEFAULT_DB_PATH
 
 settings = get_settings()
@@ -18,7 +20,9 @@ def sync_database_to_gdrive() -> None:
     db_path = Path(DEFAULT_DB_PATH)
 
     if not db_path.exists():
-        logger.warning(f"[gdrive db sync] Local database not found at {db_path.absolute()}. Nothing to sync.")
+        logger.warning(
+            f"[gdrive db sync] Local database not found at {db_path.absolute()}. Nothing to sync."
+        )
         return
 
     logger.info(f"[gdrive db sync] Connecting to Google Drive (Folder ID: {folder_id})...")
@@ -29,7 +33,6 @@ def sync_database_to_gdrive() -> None:
         return
 
     logger.info(f"[gdrive db sync] Uploading database '{db_path.name}' to Google Drive...")
-    # Using core_lib GDrive service to upload/sync
     success = service.upload_file(db_path)
     if success:
         logger.success("[gdrive db sync] Database successfully synchronized with Google Drive.")
@@ -37,5 +40,38 @@ def sync_database_to_gdrive() -> None:
         logger.error("[gdrive db sync] Failed to upload database to Google Drive.")
 
 
+def pull_database_from_gdrive() -> None:
+    """Downloads the latest finances.db from Google Drive to the local path."""
+    folder_id = settings.gdrive_snapshots_folder_id or settings.gdrive_data_folder_id
+    db_path = Path(DEFAULT_DB_PATH)
+
+    logger.info(f"[gdrive db sync] Connecting to Google Drive (Folder ID: {folder_id})...")
+    service = GDriveService(folder_id=folder_id)
+
+    if not service.authenticate():
+        logger.error("[gdrive db sync] Authentication with Google Drive failed.")
+        return
+
+    logger.info(f"[gdrive db sync] Downloading '{db_path.name}' from Google Drive...")
+    success = service.download_file(file_name=db_path.name, destination_path=db_path)
+    if success:
+        logger.success(f"[gdrive db sync] Database downloaded to '{db_path}'.")
+    else:
+        logger.error("[gdrive db sync] Failed to download database from Google Drive.")
+
+
 if __name__ == "__main__":
-    sync_database_to_gdrive()
+    parser = argparse.ArgumentParser(
+        description="Sync finances.db with Google Drive (upload by default)."
+    )
+    parser.add_argument(
+        "--pull",
+        action="store_true",
+        help="Download the database from Google Drive instead of uploading.",
+    )
+    args = parser.parse_args()
+
+    if args.pull:
+        pull_database_from_gdrive()
+    else:
+        sync_database_to_gdrive()

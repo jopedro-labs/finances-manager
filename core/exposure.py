@@ -6,8 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from config import get_settings
-from core.models import PortfolioSnapshot, Asset, ETFDetails, StockDetails
 from core.data_collectors import ETFProvider, StockProvider
+from core.models import Asset, ETFDetails, PortfolioSnapshot, StockDetails
 from core.repositories import PortfolioRepository, SqlitePortfolioRepository
 from infra.database.connection import DEFAULT_DB_PATH
 
@@ -37,8 +37,8 @@ class ExposureEngine:
         """
         self._etf_provider: ETFProvider = etf_provider or ETFProvider()
         self._stock_provider: StockProvider = stock_provider or StockProvider()
-        self._portfolio_repo: PortfolioRepository = (
-            portfolio_repo or SqlitePortfolioRepository(DEFAULT_DB_PATH)
+        self._portfolio_repo: PortfolioRepository = portfolio_repo or SqlitePortfolioRepository(
+            DEFAULT_DB_PATH
         )
         self._db_path: Path = Path(db_path) if db_path else Path(DEFAULT_DB_PATH)
 
@@ -124,28 +124,20 @@ class ExposureEngine:
                             country_totals.get("Unknown", 0.0) + unmapped_country_val
                         )
                 else:
-                    sector_totals["Unknown"] = (
-                        sector_totals.get("Unknown", 0.0) + asset_val
-                    )
-                    country_totals["Unknown"] = (
-                        country_totals.get("Unknown", 0.0) + asset_val
-                    )
+                    sector_totals["Unknown"] = sector_totals.get("Unknown", 0.0) + asset_val
+                    country_totals["Unknown"] = country_totals.get("Unknown", 0.0) + asset_val
             elif a_type == "STOCK":
                 stock_details: StockDetails | None = self._stock_provider.get_details(
                     asset, db_path=self._db_path
                 )
                 stock_sector_name: str = (
-                    stock_details.sector
-                    if stock_details and stock_details.sector
-                    else "Unknown"
+                    stock_details.sector if stock_details and stock_details.sector else "Unknown"
                 )
                 sector_totals[stock_sector_name] = (
                     sector_totals.get(stock_sector_name, 0.0) + asset_val
                 )
                 stock_country_name: str = (
-                    stock_details.country
-                    if stock_details and stock_details.country
-                    else "Unknown"
+                    stock_details.country if stock_details and stock_details.country else "Unknown"
                 )
                 country_totals[stock_country_name] = (
                     country_totals.get(stock_country_name, 0.0) + asset_val
@@ -153,15 +145,11 @@ class ExposureEngine:
 
         sector_percentages: dict[str, float] = {
             sec: round((val / total_portfolio_value) * 100.0, 2)
-            for sec, val in sorted(
-                sector_totals.items(), key=lambda item: item[1], reverse=True
-            )
+            for sec, val in sorted(sector_totals.items(), key=lambda item: item[1], reverse=True)
         }
         country_percentages: dict[str, float] = {
             cou: round((val / total_portfolio_value) * 100.0, 2)
-            for cou, val in sorted(
-                country_totals.items(), key=lambda item: item[1], reverse=True
-            )
+            for cou, val in sorted(country_totals.items(), key=lambda item: item[1], reverse=True)
         }
 
         return sector_percentages, country_percentages
@@ -197,32 +185,22 @@ class ExposureEngine:
 
         if sector and sector.lower() != "unknown" and sector_percentages:
             sec_exposure: float = sector_percentages.get(sector, 0.0)
-            is_tech_sector: bool = (
-                "technology" in sector.lower() or "tech" in sector.lower()
-            )
+            is_tech_sector: bool = "technology" in sector.lower() or "tech" in sector.lower()
             sec_limit: float = (
                 settings.max_tech_allocation_pct
                 if is_tech_sector
                 else settings.max_other_sector_allocation_pct
             )
             if sec_exposure > sec_limit and sec_limit > 0.0:
-                sec_excess_ratio: float = min(
-                    1.0, (sec_exposure - sec_limit) / sec_limit
-                )
-                sector_factor -= (
-                    settings.exposure_sector_penalty_weight * sec_excess_ratio
-                )
+                sec_excess_ratio: float = min(1.0, (sec_exposure - sec_limit) / sec_limit)
+                sector_factor -= settings.exposure_sector_penalty_weight * sec_excess_ratio
 
         if country and country.lower() != "unknown" and country_percentages:
             cou_exposure: float = country_percentages.get(country, 0.0)
             cou_limit: float = settings.max_country_allocation_pct
             if cou_exposure > cou_limit and cou_limit > 0.0:
-                cou_excess_ratio: float = min(
-                    1.0, (cou_exposure - cou_limit) / cou_limit
-                )
-                country_factor -= (
-                    settings.exposure_country_penalty_weight * cou_excess_ratio
-                )
+                cou_excess_ratio: float = min(1.0, (cou_exposure - cou_limit) / cou_limit)
+                country_factor -= settings.exposure_country_penalty_weight * cou_excess_ratio
 
         return max(0.0, sector_factor * country_factor)
 
@@ -264,9 +242,7 @@ class ExposureEngine:
         for sector, pct in sector_percentages.items():
             if sector.lower() == "unknown":
                 continue
-            is_tech_sector: bool = (
-                "technology" in sector.lower() or "tech" in sector.lower()
-            )
+            is_tech_sector: bool = "technology" in sector.lower() or "tech" in sector.lower()
             limit: float = (
                 settings.max_tech_allocation_pct
                 if is_tech_sector
@@ -274,15 +250,12 @@ class ExposureEngine:
             )
             if pct > limit:
                 violations.append(
-                    f"Sector limit exceeded for '{sector}': "
-                    f"{pct:.1f}% (Max allowed: {limit:.1f}%)"
+                    f"Sector limit exceeded for '{sector}': {pct:.1f}% (Max allowed: {limit:.1f}%)"
                 )
 
         return violations
 
-    def calculate_company_exposure(
-        self, snapshot: PortfolioSnapshot
-    ) -> dict[str, float]:
+    def calculate_company_exposure(self, snapshot: PortfolioSnapshot) -> dict[str, float]:
         """Calculates consolidated individual company exposure across direct stocks and ETFs.
 
         Performs two passes:
@@ -343,9 +316,7 @@ class ExposureEngine:
                 )
                 if details and details.holdings:
                     for holding in details.holdings:
-                        holding_isin: str = (
-                            holding.isin if holding.isin else holding.name
-                        )
+                        holding_isin: str = holding.isin if holding.isin else holding.name
                         h_weight: float = holding.weight_pct / 100.0
                         h_weighted_val: float = etf_asset_value * h_weight
 
@@ -370,9 +341,7 @@ class ExposureEngine:
 
         return company_percentages
 
-    def validate_company_limits(
-        self, company_percentages: dict[str, float]
-    ) -> list[str]:
+    def validate_company_limits(self, company_percentages: dict[str, float]) -> list[str]:
         """Validates individual company exposure against the configured policy cap.
 
         Args:

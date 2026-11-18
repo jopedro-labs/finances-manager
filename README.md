@@ -51,7 +51,7 @@ snapshots/snapshots.json
 | `data/portfolio_targets.json`          | Target allocation (%) per asset — drives rebalancing scores                |
 | `data/rules.md`                        | Business rules: scoring formulas, decision matrix, projections, governance |
 | `snapshots/snapshots.json`             | Historical snapshot log with P&L, market values and allocations            |
-| `scripts/extract_with_gemini.py`       | Gemini Vision extraction → writes temp JSON → triggers `run_snapshot.py`       |
+| `scripts/extract_xtb_open_positions.py`       | Gemini Vision extraction → writes temp JSON → triggers `run_snapshot.py`       |
 | `scripts/run_snapshot.py`                  | Reads temp JSON → appends `snapshots.json` → syncs to GDrive               |
 | `scripts/generate_portfolio_report.py` | Calls Gemini with analyst + reporter instructions → saves report           |
 | `reports/`                             | Generated reports — `YYYY-MM-DD.md` or `YYYY-MM-DD.html` (gitignored)     |

@@ -5,13 +5,13 @@ from __future__ import annotations
 from collections import defaultdict
 
 from core.models import (
-    TimeSeriesPoint,
-    PortfolioTimeSeries,
-    AssetTimeSeries,
-    AssetClassTimeSeries,
     Asset,
+    AssetClassTimeSeries,
     AssetPerformanceSummary,
+    AssetTimeSeries,
     DashboardOverview,
+    PortfolioTimeSeries,
+    TimeSeriesPoint,
 )
 from infra.database.finance_sql_extraction import (
     AssetHistoricalRecord,
@@ -100,9 +100,7 @@ class PortfolioAnalyticsEngine:
             grouped_values[ticker].append(
                 TimeSeriesPoint(date=rec.snapshot_date, value=rec.value_eur)
             )
-            grouped_qty[ticker].append(
-                TimeSeriesPoint(date=rec.snapshot_date, value=rec.quantity)
-            )
+            grouped_qty[ticker].append(TimeSeriesPoint(date=rec.snapshot_date, value=rec.quantity))
 
         series_list: list[AssetTimeSeries] = []
         for ticker, (name, a_type) in asset_info.items():
@@ -143,9 +141,7 @@ class PortfolioAnalyticsEngine:
             rec.snapshot_date: rec.total_value_eur for rec in portfolio_records
         }
 
-        class_values: dict[str, dict[str, float]] = defaultdict(
-            lambda: defaultdict(float)
-        )
+        class_values: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
 
         for rec in asset_records:
             asset_type = rec.asset_type.upper() if rec.asset_type else "UNKNOWN"
@@ -205,9 +201,7 @@ class PortfolioAnalyticsEngine:
         for rec in asset_records:
             latest_records[rec.asset_ticker] = rec
 
-        assets_by_ticker: dict[str, Asset] = {
-            ast.yahoo_ticker: ast for ast in current_assets
-        }
+        assets_by_ticker: dict[str, Asset] = {ast.yahoo_ticker: ast for ast in current_assets}
 
         summaries: list[AssetPerformanceSummary] = []
         for ticker, rec in latest_records.items():
@@ -226,9 +220,7 @@ class PortfolioAnalyticsEngine:
             roi_eur: float = val - cost_basis
             roi_pct: float = (roi_eur / cost_basis * 100.0) if cost_basis > 0 else 0.0
             share_pct: float = (
-                (val / total_portfolio_value * 100.0)
-                if total_portfolio_value > 0
-                else 0.0
+                (val / total_portfolio_value * 100.0) if total_portfolio_value > 0 else 0.0
             )
 
             summaries.append(
@@ -272,26 +264,18 @@ class PortfolioAnalyticsEngine:
             zero values if both record lists are empty.
         """
         assets_config: list[Asset] = current_assets or []
-        portfolio_ts: PortfolioTimeSeries = self.compute_portfolio_time_series(
-            portfolio_records
-        )
-        asset_series: list[AssetTimeSeries] = self.compute_asset_time_series(
-            asset_records
-        )
+        portfolio_ts: PortfolioTimeSeries = self.compute_portfolio_time_series(portfolio_records)
+        asset_series: list[AssetTimeSeries] = self.compute_asset_time_series(asset_records)
         class_series: list[AssetClassTimeSeries] = self.compute_asset_class_time_series(
             asset_records, portfolio_records
         )
 
-        latest_total: float = (
-            portfolio_records[-1].total_value_eur if portfolio_records else 0.0
-        )
+        latest_total: float = portfolio_records[-1].total_value_eur if portfolio_records else 0.0
         summaries: list[AssetPerformanceSummary] = self.compute_asset_summaries(
             asset_records, assets_config, latest_total
         )
 
-        max_drawdown: float = min(
-            (pt.value for pt in portfolio_ts.drawdown_history), default=0.0
-        )
+        max_drawdown: float = min((pt.value for pt in portfolio_ts.drawdown_history), default=0.0)
 
         top_contributor: str | None = None
         if summaries:

@@ -14,12 +14,15 @@ dependencies = [
     "google-auth-httplib2>=0.2.0",
     "google-auth-oauthlib>=1.2.0",
     "google-genai>=0.1.0",
+    "jopedro-core-lib>=0.1.0b1",
+    "finances-data @ git+https://github.com/jopedro-labs/finances-data.git",
     "pandas>=2.2.0",
     "pydantic-settings>=2.0.0",
     "yfinance>=0.2.30",
 ]
 
 [tool.setuptools.packages.find]
+include = ["core*", "infra*", "scripts*"]
 exclude = ["data*", "input*", "secrets*", ".gemini*", ".claude*"]
 
 [tool.ruff]
@@ -49,3 +52,4 @@ python_version = "3.13"
 strict = true
 ignore_missing_imports = true
 mypy_path = "stubs"
+explicit_package_bases = true

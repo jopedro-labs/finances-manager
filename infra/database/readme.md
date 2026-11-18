@@ -223,11 +223,11 @@ One record per snapshot. Fields: `snapshot_date`, `total_value_eur`.
 ### `FinanceSQLExtractor`
 
 ```python
-extractor = FinanceSQLExtractor()                      # uses settings default path
-extractor = FinanceSQLExtractor("data/finances.db")    # explicit path
+extractor = FinanceSQLExtractor()  # uses settings default path
+extractor = FinanceSQLExtractor("data/finances.db")  # explicit path
 
-history = extractor.fetch_asset_history()       # list[AssetHistoricalRecord]
-totals  = extractor.fetch_portfolio_history()   # list[PortfolioHistoricalRecord]
+history = extractor.fetch_asset_history()  # list[AssetHistoricalRecord]
+totals = extractor.fetch_portfolio_history()  # list[PortfolioHistoricalRecord]
 ```
 
 Both methods return `[]` gracefully in all of these scenarios:
@@ -275,6 +275,6 @@ with get_db_context() as conn:
 
 # Read historical data
 extractor = FinanceSQLExtractor()
-asset_history     = extractor.fetch_asset_history()
+asset_history = extractor.fetch_asset_history()
 portfolio_history = extractor.fetch_portfolio_history()
 ```
