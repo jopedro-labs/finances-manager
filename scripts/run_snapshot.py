@@ -1,5 +1,5 @@
 """
-Orchestrates the portfolio snapshot pipeline: downloads the XTB screenshot from Google Drive,
+Orchestrates the portfolio snapshot pipeline: reads the XTB screenshot from input/,
 extracts structured data using Gemini Vision, persists the snapshot to SQLite,
 and backs up the updated database back to Google Drive.
 
@@ -26,7 +26,7 @@ from config import get_settings  # noqa: E402
 from infra.database.connection import get_db_context  # noqa: E402
 from infra.database.schema import initialize_database  # noqa: E402
 from scripts.extract_xtb_open_positions import (  # noqa: E402
-    download_screenshot_from_gdrive,
+    get_screenshot_path,
     extract_data_from_screenshot,
 )
 
@@ -105,10 +105,39 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
 
     snapshot_date: str = str(snapshot.get("date", ""))
     timestamp: str = str(snapshot.get("timestamp", f"{snapshot_date}T00:00:00Z"))
-    total_invested: float = float(snapshot.get("total_invested_eur", 0.0))
-    total_market_value: float = float(snapshot.get("total_market_value_eur", 0.0))
 
-    breakdown: dict[str, Any] = snapshot.get("breakdown", {})
+    holdings_raw: list[dict[str, Any]] = (
+        snapshot.get("holdings") or snapshot.get("assets") or snapshot.get("asset") or []
+    )
+
+    # Derive totals from holdings if not pre-calculated (extractor output path)
+    total_market_value: float = float(snapshot.get("total_market_value_eur", 0.0))
+    total_invested: float = float(snapshot.get("total_invested_eur", 0.0))
+    breakdown: dict[str, Any] = dict(snapshot.get("breakdown") or {})
+
+    if total_market_value <= 0.0 and holdings_raw:
+        for h in holdings_raw:
+            qty = float(h.get("quantity", 0.0))
+            if qty <= 0.0:
+                continue
+            mv = float(h.get("market_value_eur", 0.0))
+            np_ = float(h.get("net_profit_eur", 0.0))
+            total_market_value += mv
+            total_invested += mv - np_  # total_cost_eur = market_value_eur - net_profit_eur
+
+    if not breakdown and holdings_raw:
+        stocks_sum = sum(
+            float(h.get("market_value_eur", 0.0))
+            for h in holdings_raw
+            if str(h.get("asset_type", "")).upper() == "STOCK" and float(h.get("quantity", 0.0)) > 0
+        )
+        etfs_sum = sum(
+            float(h.get("market_value_eur", 0.0))
+            for h in holdings_raw
+            if str(h.get("asset_type", "")).upper() == "ETF" and float(h.get("quantity", 0.0)) > 0
+        )
+        breakdown = {"stocks_eur": stocks_sum, "etfs_eur": etfs_sum}
+
     stocks_eur: float = float(breakdown.get("stocks_eur", 0.0))
 
     if total_market_value <= 0.0 or stocks_eur <= 0.0:
@@ -163,14 +192,12 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
             )
             snapshot_id: int = int(cursor.lastrowid)
 
-            assets_raw: list[dict[str, Any]] = (
-                snapshot.get("holdings") or snapshot.get("assets") or snapshot.get("asset") or []
-            )
-
-            for item in assets_raw:
+            for item in holdings_raw:
                 yahoo_ticker: str = str(item.get("yahoo_ticker") or item.get("ticker", ""))
                 isin: str | None = item.get("isin")
-                native_currency: str = str(item.get("native_currency", "EUR")).upper()
+                native_currency: str = str(
+                    item.get("native_currency") or item.get("currency") or "EUR"
+                ).upper()
                 currency_suffix: str = native_currency.lower()
 
                 asset_id: int | None = _get_asset_id(cursor, yahoo_ticker, isin)
@@ -181,8 +208,11 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
                     continue
 
                 quantity: float = float(item.get("quantity", 0.0))
-                total_cost_eur: float = float(item.get("total_cost_eur", 0.0))
                 market_value_eur: float = float(item.get("market_value_eur", 0.0))
+                net_profit_eur: float = float(item.get("net_profit_eur", 0.0))
+                total_cost_eur: float = float(
+                    item.get("total_cost_eur") or (market_value_eur - net_profit_eur)
+                )
                 native_price: float = float(
                     item.get(f"market_price_{currency_suffix}")
                     or item.get("market_price", 0.0)
@@ -228,7 +258,11 @@ def push_to_gdrive() -> None:
             logger.warning("[snapshot] Database file not found — skipping GDrive backup.")
             return
 
-        drive: Any = GDriveService(folder_id=settings.gdrive_snapshots_folder_id)
+        drive: Any = GDriveService(
+            credentials_path=settings.gdrive_credentials_file,
+            token_path=settings.gdrive_token_file,
+            folder_id=settings.gdrive_snapshots_folder_id,
+        )
 
         file_id: str | None = drive.upload_file(
             file_path=db_path,
@@ -249,8 +283,8 @@ def push_to_gdrive() -> None:
 if __name__ == "__main__":
     logger.info("[snapshot] Starting automated XTB portfolio snapshot pipeline...")
 
-    # 1. Descarrega a screenshot da XTB diretamente da pasta do Google Drive
-    image_path = download_screenshot_from_gdrive()
+    # 1. Lê a screenshot local da pasta input/
+    image_path = get_screenshot_path()
 
     # 2. Executa a extração inteligente com a Gemini Vision API
     snapshot_data = extract_data_from_screenshot(image_path)

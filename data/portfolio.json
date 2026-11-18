@@ -3,101 +3,104 @@
     {
       "name": "Core MSCI World",
       "isin": "IE00B4L5Y983",
-      "yahoo_ticker": "EUNL.DE",
-      "xtb_ticker": "EUNL.DE",
-      "xtb_name": "Core MSCI World",
       "asset_type": "ETF",
-      "native_currency": "EUR",
-      "quantity": 7,
-      "average_buy_price": 130.995
+      "target_allocation_pct": 26.0
     },
     {
       "name": "MSCI World Momentum USD (Acc)",
       "isin": "IE00BL25JP72",
-      "yahoo_ticker": "XDEM.DE",
-      "xtb_ticker": "XDEM.DE",
-      "xtb_name": "MSCI World Momentum",
       "asset_type": "ETF",
-      "native_currency": "EUR",
-      "quantity": 4,
-      "average_buy_price": 84.99
+      "target_allocation_pct": 11.0
     },
     {
       "name": "HSBC MSCI Emerging Markets UCITS ETF",
       "isin": "IE000KCS7J59",
-      "yahoo_ticker": "H4Z3.DE",
-      "xtb_ticker": "H410.DE",
-      "xtb_name": "MSCI Emerging Markets",
       "asset_type": "ETF",
-      "native_currency": "EUR",
-      "quantity": 20,
-      "average_buy_price": 14.5195
+      "target_allocation_pct": 10.0
     },
     {
       "name": "VanEck Defense UCITS ETF",
       "isin": "IE000YYE6WK5",
-      "yahoo_ticker": "DFEN.DE",
-      "xtb_ticker": "DFEN.DE",
-      "xtb_name": "Defense",
       "asset_type": "ETF",
-      "native_currency": "EUR",
-      "quantity": 4,
-      "average_buy_price": 50.81
+      "target_allocation_pct": 6.0
     },
     {
       "name": "VanEck Uranium and Nuclear Technologies UCITS ETF",
       "isin": "IE000M7V94E1",
-      "yahoo_ticker": "NUKL.DE",
-      "xtb_ticker": "NUKL.DE",
-      "xtb_name": "Uranium and Nuclear Technlgs",
       "asset_type": "ETF",
-      "native_currency": "EUR",
-      "quantity": 5,
-      "average_buy_price": 39.49
+      "target_allocation_pct": 5.0
     },
-
+    {
+      "name": "Apple Inc.",
+      "isin": "US0378331005",
+      "asset_type": "STOCK",
+      "target_allocation_pct": 5.0
+    },
     {
       "name": "Amazon.com, Inc.",
       "isin": "US0231351067",
-      "yahoo_ticker": "AMZN",
-      "xtb_ticker": "Amazon",
       "asset_type": "STOCK",
-      "native_currency": "USD",
-      "quantity": 1,
-      "average_buy_price": 262.74
+      "target_allocation_pct": 5.0
     },
     {
       "name": "NVIDIA Corporation",
       "isin": "US67066G1040",
-      "yahoo_ticker": "NVDA",
-      "xtb_ticker": "NVDA.US",
-      "xtb_name": "Nvidia",
       "asset_type": "STOCK",
-      "native_currency": "USD",
-      "quantity": 2,
-      "average_buy_price": 221.00
+      "target_allocation_pct": 4
     },
     {
-      "name": "Taiwan Semiconductor Manufacturing Company Limited",
-      "isin": "US8740391003",
-      "yahoo_ticker": "TSM",
-      "xtb_ticker": "TSM.US",
-      "xtb_name": "TSMC",
+      "name": "Microsoft Corporation",
+      "isin": "US5949181045",
       "asset_type": "STOCK",
-      "native_currency": "USD",
-      "quantity": 1,
-      "average_buy_price": 433.64
+      "target_allocation_pct": 4
+    },
+    {
+      "name": "Alphabet Inc. (Class A)",
+      "isin": "US02079K3059",
+      "asset_type": "STOCK",
+      "target_allocation_pct": 4.0
+    },
+    {
+      "name": "Taiwan Semiconductor Manufacturing Co.",
+      "isin": "US8740391003",
+      "asset_type": "STOCK",
+      "target_allocation_pct": 3.0
+    },
+    {
+      "name": "Eli Lilly and Company",
+      "isin": "US5324571083",
+      "asset_type": "STOCK",
+      "target_allocation_pct": 3.0
+    },
+    {
+      "name": "Novo Nordisk A/S (Class B)",
+      "isin": "DK0062498333",
+      "asset_type": "STOCK",
+      "target_allocation_pct": 3.0
+    },
+    {
+      "name": "Berkshire Hathaway Inc. (Class B)",
+      "isin": "US0846707026",
+      "asset_type": "STOCK",
+      "target_allocation_pct": 3.0
     },
     {
       "name": "JPMorgan Chase & Co.",
       "isin": "US46625H1005",
-      "yahoo_ticker": "JPM",
-      "xtb_ticker": "JPM.US",
-      "xtb_name": "JPMorgan Chase",
       "asset_type": "STOCK",
-      "native_currency": "USD",
-      "quantity": 1,
-      "average_buy_price": 336.87
+      "target_allocation_pct": 2.0
+    },
+    {
+      "name": "SAP SE",
+      "isin": "DE0007164600",
+      "asset_type": "STOCK",
+      "target_allocation_pct": 3.0
+    },
+    {
+      "name": "LVMH Moët Hennessy Louis Vuitton SE",
+      "isin": "FR0010208488",
+      "asset_type": "STOCK",
+      "target_allocation_pct": 2.0
     }
   ]
 }

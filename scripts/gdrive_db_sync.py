@@ -26,14 +26,16 @@ def sync_database_to_gdrive() -> None:
         return
 
     logger.info(f"[gdrive db sync] Connecting to Google Drive (Folder ID: {folder_id})...")
-    service = GDriveService(folder_id=folder_id)
+    service = GDriveService(
+        credentials_path=settings.gdrive_credentials_file,
+        token_path=settings.gdrive_token_file,
+        folder_id=folder_id,
+    )
 
-    if not service.authenticate():
-        logger.error("[gdrive db sync] Authentication with Google Drive failed.")
-        return
+    logger.info(f"[gdrive db sync] Uploading/updating database '{db_path.name}' on Google Drive...")
 
-    logger.info(f"[gdrive db sync] Uploading database '{db_path.name}' to Google Drive...")
-    success = service.upload_file(db_path)
+    success = service.upload_file(db_path, overwrite=True)
+
     if success:
         logger.success("[gdrive db sync] Database successfully synchronized with Google Drive.")
     else:
@@ -46,28 +48,36 @@ def pull_database_from_gdrive() -> None:
     db_path = Path(DEFAULT_DB_PATH)
 
     logger.info(f"[gdrive db sync] Connecting to Google Drive (Folder ID: {folder_id})...")
-    service = GDriveService(folder_id=folder_id)
-
-    if not service.authenticate():
-        logger.error("[gdrive db sync] Authentication with Google Drive failed.")
-        return
+    service = GDriveService(
+        credentials_path=settings.gdrive_credentials_file,
+        token_path=settings.gdrive_token_file,
+        folder_id=folder_id,
+    )
 
     logger.info(f"[gdrive db sync] Downloading '{db_path.name}' from Google Drive...")
     success = service.download_file(file_name=db_path.name, destination_path=db_path)
     if success:
         logger.success(f"[gdrive db sync] Database downloaded to '{db_path}'.")
     else:
-        logger.error("[gdrive db sync] Failed to download database from Google Drive.")
+        logger.warning(
+            "[gdrive db sync] Database not found on Google Drive — starting fresh from local state."
+        )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Sync finances.db with Google Drive (upload by default)."
     )
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "--pull",
         action="store_true",
         help="Download the database from Google Drive instead of uploading.",
+    )
+    group.add_argument(
+        "--push",
+        action="store_true",
+        help="Upload the local database to Google Drive (default behaviour).",
     )
     args = parser.parse_args()
 

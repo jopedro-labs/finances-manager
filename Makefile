@@ -30,14 +30,33 @@ snapshot:
 	@echo "[make snapshot] Step 2: Running automated XTB screenshot extraction, saving snapshot & pushing to GDrive..."
 	@$(PYTHON) scripts/run_snapshot.py
 
+quality:
+	@echo "[make quality] Step 1: Pulling latest JSON configs from Google Drive..."
+	@$(PYTHON) scripts/gdrive_jsons_sync.py --pull
+	@echo "[make quality] Step 2: Evaluating stock and ETF fundamental quality tiers..."
+	@$(PYTHON) scripts/run_quality.py
+
+quality-refresh:
+	@echo "[make quality-refresh] Step 1: Pulling latest JSON configs from Google Drive..."
+	@$(PYTHON) scripts/gdrive_jsons_sync.py --pull
+	@echo "[make quality-refresh] Step 2: Evaluating fundamental quality tiers with forced live refresh..."
+	@$(PYTHON) scripts/run_quality.py --force-refresh
+
 analysis:
-	@echo "Running portfolio analysis (using cached data)..."
+	@echo "[make analysis] Step 1: Pulling latest database from Google Drive..."
+	@$(PYTHON) scripts/gdrive_db_sync.py --pull
+	@echo "[make analysis] Step 2: Running portfolio analysis (using cached data)..."
 	@$(PYTHON) scripts/run_analysis.py
+	@echo "[make analysis] Step 3: Pushing latest database to Google Drive..."
+	@$(PYTHON) scripts/gdrive_db_sync.py --push
 
 analysis-refresh:
-	@echo "Running portfolio analysis with forced live refresh..."
+	@echo "[make analysis] Step 1: Pulling latest database from Google Drive..."
+	@$(PYTHON) scripts/gdrive_db_sync.py --pull
+	@echo "[make analysis] Step 2: Running portfolio analysis with forced live refresh..."
 	@$(PYTHON) scripts/run_analysis.py --force-refresh
-
+	@echo "[make analysis] Step 3: Pushing latest database to Google Drive..."
+	@$(PYTHON) scripts/gdrive_db_sync.py --push
 dashboard:
 	@echo "Computing dashboard overview and performance time-series..."
 	@$(PYTHON) scripts/run_dashboard.py
@@ -45,14 +64,6 @@ dashboard:
 projections:
 	@echo "Running portfolio wealth and growth projections..."
 	@$(PYTHON) scripts/run_projections.py
-
-quality:
-	@echo "Evaluating stock and ETF fundamental quality tiers..."
-	@$(PYTHON) scripts/run_quality.py
-
-quality-refresh:
-	@echo "Evaluating fundamental quality tiers with forced live refresh..."
-	@$(PYTHON) scripts/run_quality.py --force-refresh
 
 gdrive-push:
 	@echo "Pushing database and JSON configs to Google Drive..."

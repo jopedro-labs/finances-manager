@@ -11,7 +11,7 @@ from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
-from common.constants import COUNTRY_ALIASES
+from core.common.constants import COUNTRY_ALIASES
 from pydantic import BaseModel, Field
 
 # =====================================================================

@@ -338,7 +338,7 @@ class ETFProvider:
         JustETFClient is imported lazily inside __init__ to avoid a circular
         import between infra.just_etf and core.providers at module load time.
         """
-        from infra.just_etf.just_etf_client import JustETFClient
+        from finances_data.just_etf import JustETFClient
 
         self.justetf_client: Any = justetf_client or JustETFClient()
         self.cache_repo: ETFCacheRepository = cache_repo or JsonETFCacheRepository()
