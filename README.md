@@ -78,7 +78,6 @@ data/finances.db
 | `scripts/migrate_json_to_sqlite.py`    | Portfolio configuration seed reconciliation into SQLite database           |
 | `reports/`                             | Generated reports — `YYYY-MM-DD.md`, `.html`, `quality_report.md`, etc.    |
 | `config.py`                            | Centralised settings via pydantic-settings (paths + env vars)              |
-| `stubs/`                               | Local type stubs for untyped third-party libraries                         |
 | `.env`                                 | Local environment variables (not committed)                                |
 | `secrets/`                             | OAuth2 credentials (`credentials.json`) and session token (`token.json`)   |
 

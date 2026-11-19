@@ -51,7 +51,6 @@ quote-style = "double"
 python_version = "3.13"
 strict = true
 ignore_missing_imports = true
-mypy_path = "stubs"
 explicit_package_bases = true
 
 [tool.pytest.ini_options]
