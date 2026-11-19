@@ -15,6 +15,8 @@ _ALLOWED_MIGRATION_TABLES: frozenset[str] = frozenset(
 _ALLOWED_MIGRATION_COLUMNS: frozenset[str] = frozenset({"quality_tier", "quality_score"})
 _ALLOWED_MIGRATION_COL_TYPES: frozenset[str] = frozenset({"TEXT", "INTEGER", "REAL"})
 
+_SCHEMA_INITIALIZED: bool = False
+
 CREATE_ASSETS_TABLE_SQL: str = """
 CREATE TABLE IF NOT EXISTS assets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -305,16 +307,23 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
         raise
 
 
-def initialize_database(conn: sqlite3.Connection) -> None:
+def initialize_database(conn: sqlite3.Connection, force: bool = False) -> None:
     """Initializes the SQLite database by orchestrating schema creation,
     performance index setup, and applying safe incremental migrations.
 
+    Runs only once per process lifecycle unless force=True.
+
     Args:
         conn: Active sqlite3.Connection instance.
+        force: If True, forces re-running schema verification.
 
     Raises:
         sqlite3.Error: If database initialization or migration execution fails.
     """
+    global _SCHEMA_INITIALIZED
+    if _SCHEMA_INITIALIZED and not force:
+        return
+
     try:
         logger.info("[schema] Initializing database schema and performance indexes...")
         create_tables(conn)
@@ -323,6 +332,7 @@ def initialize_database(conn: sqlite3.Connection) -> None:
         apply_migrations(conn)
 
         logger.success("[schema] Database initialization completed successfully.")
+        _SCHEMA_INITIALIZED = True
     except Exception as e:
         logger.error(f"[schema] Critical error during database initialization: {e}")
         raise

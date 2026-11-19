@@ -133,7 +133,8 @@ Return ONLY valid JSON, no markdown, no explanation:
             cleaned_text = cleaned_text[:-3]
         cleaned_text = cleaned_text.strip()
 
-        parsed_data = json.loads(cleaned_text)
+        raw_data: Any = json.loads(cleaned_text)
+        parsed_data: dict[str, Any] = dict(raw_data) if isinstance(raw_data, dict) else {}
 
         logger.success(
             f"[extract with gemini] Successfully extracted and parsed data from '{image_path.name}'."

@@ -11,8 +11,9 @@ from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
-from core.common.constants import COUNTRY_ALIASES
 from pydantic import BaseModel, Field
+
+from core.common.constants import COUNTRY_ALIASES
 
 # =====================================================================
 # Shared Parsing Helpers & Mixins (DRY Principles)
@@ -638,6 +639,7 @@ class RecommendationAction(StrEnum):
     BUY = "BUY"
     SELL = "SELL"
     HOLD = "HOLD"
+    HOLD_REBALANCE = "HOLD/REBAL"
 
 
 class UrgencyLevel(StrEnum):
@@ -969,4 +971,41 @@ class GrowthProjectionResult(DictAccessMixin):
             "scenarios": [sc.to_dict() for sc in self.scenarios],
             "historical_cagr_pct": self.historical_cagr_pct,
             "primary_scenario": self.primary_scenario.to_dict() if self.primary_scenario else None,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class ScoredAsset:
+    """Encapsulates the deterministic quantitative scoring output for an asset."""
+
+    symbol: str
+    name: str
+    asset_type: str
+    raw_score: float
+    penalty_factor: float
+    final_score: float
+    quality_tier: str
+    valuation_status: str
+    recommendation: RebalanceRecommendation
+    dip_score: float
+    cost_or_pe_score: float
+    allocation_score: float
+    range_score: float = 0.0
+
+    def to_dict(self) -> dict[str, Any]:
+        """Serializes scored asset instance to a dictionary."""
+        return {
+            "symbol": self.symbol,
+            "name": self.name,
+            "asset_type": self.asset_type,
+            "raw_score": self.raw_score,
+            "penalty_factor": self.penalty_factor,
+            "final_score": self.final_score,
+            "quality_tier": self.quality_tier,
+            "valuation_status": self.valuation_status,
+            "recommendation": self.recommendation.model_dump(),
+            "dip_score": self.dip_score,
+            "cost_or_pe_score": self.cost_or_pe_score,
+            "allocation_score": self.allocation_score,
+            "range_score": self.range_score,
         }

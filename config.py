@@ -42,7 +42,9 @@ class Settings(BaseSettings):
     gdrive_token_file: Path = Field(default=SECRETS_DIR / "token.json", alias="GDRIVE_TOKEN_FILE")
     gdrive_data_folder_id: str | None = Field(default=None, alias="GDRIVE_DATA_FOLDER_ID")
     gdrive_snapshots_folder_id: str | None = Field(default=None, alias="GDRIVE_SNAPSHOTS_FOLDER_ID")
-    gdrive_xtb_open_positions_folder_id: str | None = Field(default=None, alias="GDRIVE_XTB_OPEN_POSITIONS_FOLDER_ID")
+    gdrive_xtb_open_positions_folder_id: str | None = Field(
+        default=None, alias="GDRIVE_XTB_OPEN_POSITIONS_FOLDER_ID"
+    )
 
     # Cache Settings
     etf_cache_ttl_days: int = Field(default=30, alias="ETF_CACHE_TTL_DAYS")
@@ -63,6 +65,29 @@ class Settings(BaseSettings):
     exposure_country_penalty_weight: float = Field(
         default=0.20, alias="EXPOSURE_COUNTRY_PENALTY_WEIGHT"
     )
+
+    # Deterministic Scoring Weights — Stocks (Sum: 1.0)
+    stock_weight_dip: float = Field(default=0.25, alias="STOCK_WEIGHT_DIP")
+    stock_weight_forward_pe: float = Field(default=0.25, alias="STOCK_WEIGHT_FORWARD_PE")
+    stock_weight_52w_range: float = Field(default=0.15, alias="STOCK_WEIGHT_52W_RANGE")
+    stock_weight_allocation: float = Field(default=0.35, alias="STOCK_WEIGHT_ALLOCATION")
+
+    # Deterministic Scoring Weights — ETFs (Sum: 1.0)
+    etf_weight_dip: float = Field(default=0.30, alias="ETF_WEIGHT_DIP")
+    etf_weight_ter: float = Field(default=0.20, alias="ETF_WEIGHT_TER")
+    etf_weight_allocation: float = Field(default=0.50, alias="ETF_WEIGHT_ALLOCATION")
+
+    # Scoring Calibration Parameters (rules.md)
+    dip_min_pct: float = Field(default=5.0, alias="DIP_MIN_PCT")
+    dip_max_pct: float = Field(default=20.0, alias="DIP_MAX_PCT")
+    alloc_gap_max_pct: float = Field(default=10.0, alias="ALLOC_GAP_MAX_PCT")
+    pe_growth_multiplier: float = Field(default=2.4, alias="PE_GROWTH_MULTIPLIER")
+    pe_neutral_score: float = Field(default=0.60, alias="PE_NEUTRAL_SCORE")
+    range_bottom_band: float = Field(default=0.30, alias="RANGE_BOTTOM_BAND")
+    ter_low_pct: float = Field(default=0.10, alias="TER_LOW_PCT")
+    ter_high_pct: float = Field(default=0.50, alias="TER_HIGH_PCT")
+    alloc_gap_normalizer_pct: float = Field(default=15.0, alias="ALLOC_GAP_NORMALIZER_PCT")
+    snapshot_freshness_hours: int = Field(default=48, alias="SNAPSHOT_FRESHNESS_HOURS")
 
     @field_validator("gdrive_data_folder_id", "gdrive_snapshots_folder_id")
     @classmethod

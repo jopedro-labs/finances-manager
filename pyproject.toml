@@ -53,3 +53,7 @@ strict = true
 ignore_missing_imports = true
 mypy_path = "stubs"
 explicit_package_bases = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
