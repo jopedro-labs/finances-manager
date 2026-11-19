@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +24,7 @@ from core_lib.logger import logger  # noqa: E402
 from dotenv import load_dotenv  # noqa: E402
 
 from config import get_settings  # noqa: E402
+from core.currency_exchange import get_exchange_rate  # noqa: E402
 from infra.database.connection import get_db_context  # noqa: E402
 from infra.database.schema import initialize_database  # noqa: E402
 from scripts.extract_xtb_open_positions import (  # noqa: E402
@@ -103,8 +105,9 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
     settings: Any = get_settings()
     db_path: Path = settings.finance_db_file
 
-    snapshot_date: str = str(snapshot.get("date", ""))
-    timestamp: str = str(snapshot.get("timestamp", f"{snapshot_date}T00:00:00Z"))
+    now_utc = datetime.now(UTC)
+    snapshot_date: str = now_utc.strftime("%Y-%m-%d")
+    timestamp: str = now_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     holdings_raw: list[dict[str, Any]] = (
         snapshot.get("holdings") or snapshot.get("assets") or snapshot.get("asset") or []
@@ -156,7 +159,22 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
             (unrealized_pnl / total_invested * 100.0) if total_invested > 0 else 0.0,
         )
     )
-    currencies_json: str = json.dumps(snapshot.get("currencies_rate", {}))
+    raw_rates = snapshot.get("currencies_rate")
+    rates_and_metadata: dict[str, Any] = dict(raw_rates) if isinstance(raw_rates, dict) else {}
+    if not rates_and_metadata.get("EURUSD"):
+        try:
+            live_eurusd = get_exchange_rate("EUR", "USD")
+            if live_eurusd:
+                rates_and_metadata["EURUSD"] = round(live_eurusd, 4)
+        except Exception as e:
+            logger.warning(f"[snapshot] Could not fetch live EUR/USD rate: {e}")
+    free_funds = snapshot.get("free_funds_eur") or snapshot.get("free_funds")
+    account_equity = snapshot.get("account_equity_eur") or snapshot.get("my_trades_value")
+    if free_funds is not None:
+        rates_and_metadata["free_funds_eur"] = float(free_funds)
+    if account_equity is not None:
+        rates_and_metadata["account_equity_eur"] = float(account_equity)
+    currencies_json: str = json.dumps(rates_and_metadata)
     breakdown_json: str = json.dumps(breakdown)
 
     try:
@@ -191,6 +209,10 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
                 ),
             )
             snapshot_id: int = int(cursor.lastrowid)
+
+            # Reset active quantities to 0.0 before applying current snapshot
+            # This cleanly separates active holdings from watchlist items
+            cursor.execute("UPDATE assets SET quantity = 0.0")
 
             for item in holdings_raw:
                 yahoo_ticker: str = str(item.get("yahoo_ticker") or item.get("ticker", ""))
@@ -236,6 +258,22 @@ def save_snapshot(snapshot: dict[str, Any]) -> None:
                         native_currency,
                         market_value_eur,
                     ),
+                )
+
+                avg_buy_price = float(
+                    item.get(f"average_buy_price_{currency_suffix}")
+                    or item.get("average_buy_price", 0.0)
+                    or (total_cost_eur / quantity if quantity > 0 else 0.0)
+                )
+
+                # Synchronize live active position in master assets table
+                cursor.execute(
+                    """
+                    UPDATE assets
+                    SET quantity = ?, average_buy_price = ?
+                    WHERE id = ?
+                    """,
+                    (quantity, avg_buy_price, asset_id),
                 )
 
         logger.success(

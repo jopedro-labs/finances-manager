@@ -814,6 +814,9 @@ class DashboardOverview(DictAccessMixin):
     asset_summaries: list[AssetPerformanceSummary] = field(default_factory=list)
     top_growth_contributor: str | None = None
     max_drawdown_percent: float = 0.0
+    latest_invested_eur: float = 0.0
+    latest_unrealized_pnl_eur: float = 0.0
+    latest_unrealized_pnl_pct: float = 0.0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> DashboardOverview:
@@ -843,6 +846,9 @@ class DashboardOverview(DictAccessMixin):
             ],
             top_growth_contributor=_get_str(data, "top_growth_contributor"),
             max_drawdown_percent=_get_float(data, "max_drawdown_percent", 0.0) or 0.0,
+            latest_invested_eur=_get_float(data, "latest_invested_eur", 0.0) or 0.0,
+            latest_unrealized_pnl_eur=_get_float(data, "latest_unrealized_pnl_eur", 0.0) or 0.0,
+            latest_unrealized_pnl_pct=_get_float(data, "latest_unrealized_pnl_pct", 0.0) or 0.0,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -853,6 +859,9 @@ class DashboardOverview(DictAccessMixin):
             "asset_summaries": [item.to_dict() for item in self.asset_summaries],
             "top_growth_contributor": self.top_growth_contributor,
             "max_drawdown_percent": self.max_drawdown_percent,
+            "latest_invested_eur": self.latest_invested_eur,
+            "latest_unrealized_pnl_eur": self.latest_unrealized_pnl_eur,
+            "latest_unrealized_pnl_pct": self.latest_unrealized_pnl_pct,
         }
 
 

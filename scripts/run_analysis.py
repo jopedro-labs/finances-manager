@@ -22,10 +22,11 @@ if str(ROOT_DIR) not in sys.path:
 
 from core_lib.logger import logger  # noqa: E402
 
-from config import DATA_DIR, get_settings  # noqa: E402
+from config import DATA_DIR, REPORTS_DIR, get_settings  # noqa: E402
+from core.analysis import evaluate_etf_quality, evaluate_stock_quality  # noqa: E402
 from core.data_collectors import ETFProvider, StockProvider  # noqa: E402
 from core.exposure import ExposureEngine  # noqa: E402
-from core.models import PortfolioSnapshot, ScoredAsset  # noqa: E402
+from core.models import Asset, PortfolioSnapshot, ScoredAsset  # noqa: E402
 from core.repositories import (  # noqa: E402
     SqliteHistoryRepository,
     SqliteOpportunityRepository,
@@ -55,12 +56,12 @@ def _load_targets_map() -> dict[str, float]:
 
 
 def _calculate_exposure_penalties(
+    sector_pcts: dict[str, float],
+    country_pcts: dict[str, float],
     snapshot: PortfolioSnapshot,
-    exposure_engine: ExposureEngine,
     settings: Any,
 ) -> dict[str, float]:
     """Calculates multiplicative penalty factor (<= 1.0) for each asset based on exposure breaches."""
-    sector_pcts, country_pcts = exposure_engine.calculate_consolidated_exposure(snapshot)
     penalties: dict[str, float] = {}
 
     for asset_snap in snapshot.assets_snapshot:
@@ -78,6 +79,154 @@ def _calculate_exposure_penalties(
 
         penalties[isin] = round(max(0.20, penalty), 4)
     return penalties
+
+
+def _generate_markdown_analysis_report(
+    snapshot: PortfolioSnapshot,
+    scored_assets: list[ScoredAsset],
+    assets: list[Asset],
+    sector_pcts: dict[str, float],
+    country_pcts: dict[str, float],
+    penalties_map: dict[str, float],
+    current_allocations: dict[str, float],
+    targets_map: dict[str, float],
+    output_path: Path,
+) -> None:
+    """Generates a structured markdown report from opportunity analysis and saves it.
+
+    Args:
+        snapshot: Current portfolio snapshot.
+        scored_assets: Ranked list of ScoredAsset objects.
+        sector_pcts: Value-weighted consolidated sector allocation percentages.
+        country_pcts: Value-weighted consolidated country allocation percentages.
+        penalties_map: Mapping of ISIN to calculated exposure penalty factor.
+        current_allocations: Mapping of ISIN to current allocation percentage.
+        targets_map: Mapping of ISIN to target allocation percentage.
+        output_path: Path where analysis_report.md should be written.
+    """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    now_str = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+    total_val = snapshot.total_market_value_eur
+    total_inv = snapshot.total_invested_eur
+    pnl_eur = snapshot.unrealized_pnl_eur
+    pnl_pct = snapshot.unrealized_pnl_pct
+
+    stocks_count = sum(1 for a in scored_assets if a.asset_type == "STOCK")
+    etfs_count = sum(1 for a in scored_assets if a.asset_type == "ETF")
+
+    md: list[str] = [
+        "# Portfolio Opportunity & Performance Analysis Report",
+        "",
+        f"> **Generated at:** {now_str}  ",
+        f"> **Snapshot Date:** {snapshot.timestamp.split('T')[0]}  ",
+        f"> **Total Assets Analyzed:** {len(scored_assets)} ({stocks_count} Stocks, {etfs_count} ETFs)",
+        "",
+        "## 1. Executive Macro Summary & Portfolio KPIs",
+        "",
+        "| Portfolio Metric | Value |",
+        "|---|---|",
+        f"| **Total Market Value** | €{total_val:,.2f} |",
+        f"| **Total Invested Capital** | €{total_inv:,.2f} |",
+        f"| **Unrealized Gain / Loss** | €{pnl_eur:+,.2f} ({pnl_pct:+.2f}%) |",
+        "",
+        "---",
+        "",
+        "## 2. Exposure & Concentration Limits",
+        "",
+        "### Geographic Exposure (Look-Through)",
+        "| Country | Weight % | Policy Ceiling | Status |",
+        "|---|---|---|---|",
+    ]
+
+    for country, pct in sorted(country_pcts.items(), key=lambda x: x[1], reverse=True):
+        status = "⚠️ **BREACH**" if pct > 60.0 else "✅ Compliant"
+        md.append(f"| {country} | {pct:.1f}% | 60.0% | {status} |")
+
+    md.extend(
+        [
+            "",
+            "### Sector Exposure",
+            "| Sector | Weight % | Policy Ceiling | Status |",
+            "|---|---|---|---|",
+        ]
+    )
+
+    for sector, pct in sorted(sector_pcts.items(), key=lambda x: x[1], reverse=True):
+        ceiling = 50.0 if sector == "Technology" else 20.0
+        status = "⚠️ **BREACH**" if pct > ceiling else "✅ Compliant"
+        md.append(f"| {sector} | {pct:.1f}% | {ceiling:.1f}% | {status} |")
+
+    md.extend(
+        [
+            "",
+            "---",
+            "",
+            "## 3. Opportunity Ranking & Rebalance Recommendations",
+            "",
+            "| Rank | Asset Name | Symbol | Type | Current % | Target % | Score | Recommendation | Confidence |",
+            "|---|---|---|---|---|---|---|---|---|",
+        ]
+    )
+
+    for rank, item in enumerate(scored_assets, start=1):
+        rec = item.recommendation
+        isin_val = next(
+            (a.isin for a in assets if (a.yahoo_ticker == item.symbol or a.isin == item.symbol)), ""
+        )
+        curr_pct = f"{current_allocations.get(isin_val, 0.0):.1f}%"
+        tgt_pct = f"{rec.target_allocation_pct:.1f}%"
+        md.append(
+            f"| #{rank} | **{item.name}** | `{item.symbol}` | {item.asset_type} | "
+            f"{curr_pct} | {tgt_pct} | `{item.final_score:.4f}` | "
+            f"**{rec.action.value}** | {rec.confidence_score * 100:.0f}% |"
+        )
+
+    md.extend(
+        [
+            "",
+            "---",
+            "",
+            "## 4. Quantitative Score Decomposition",
+            "",
+            "| Symbol | Final Score | Penalty Factor | Dip Score | Cost / P/E Score | Allocation Gap Score | 52w Range Score |",
+            "|---|---|---|---|---|---|---|",
+        ]
+    )
+
+    for item in scored_assets:
+        md.append(
+            f"| `{item.symbol}` | **`{item.final_score:.4f}`** | `{item.penalty_factor:.2f}` | "
+            f"`{item.dip_score:.4f}` | `{item.cost_or_pe_score:.4f}` | "
+            f"`{item.allocation_score:.4f}` | `{item.range_score:.4f}` |"
+        )
+
+    md.extend(
+        [
+            "",
+            "---",
+            "",
+            "## 5. Decision Rationale & Rebalance Findings",
+            "",
+        ]
+    )
+
+    for item in scored_assets:
+        rec = item.recommendation
+        md.append(f"### #{item.name} (`{item.symbol}`)")
+        md.append(
+            f"- **Recommended Action:** **{rec.action.value}** (Urgency: {rec.urgency_level.value}, Confidence: {rec.confidence_score * 100:.0f}%)"
+        )
+        md.append(
+            f"- **Quality Tier:** {item.quality_tier} | **Valuation Status:** {item.valuation_status}"
+        )
+        md.append(f"- **Rationale:** {rec.reasoning}")
+        md.append("")
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(md))
+
+    logger.success(f"[run analysis] Analysis report successfully written to '{output_path}'.")
 
 
 def main() -> None:
@@ -101,7 +250,8 @@ def main() -> None:
     history_repo = SqliteHistoryRepository(db_path)
     opp_repo = SqliteOpportunityRepository(db_path)
 
-    assets = portfolio_repo.load_assets()
+    # Load all 17 portfolio assets (10 active holdings + 7 watchlist items)
+    assets = portfolio_repo.load_all_assets()
     if not assets:
         logger.error(
             "[run analysis] No active assets found in SQLite database. Run make migrate first."
@@ -126,7 +276,13 @@ def main() -> None:
         portfolio_repo=portfolio_repo,
     )
 
-    penalties_map = _calculate_exposure_penalties(latest_snapshot, exposure_engine, settings)
+    sector_pcts, country_pcts = exposure_engine.calculate_consolidated_exposure(latest_snapshot)
+    penalties_map = _calculate_exposure_penalties(
+        sector_pcts=sector_pcts,
+        country_pcts=country_pcts,
+        snapshot=latest_snapshot,
+        settings=settings,
+    )
 
     # Calculate current allocation percentages from latest snapshot
     total_market_val = latest_snapshot.total_market_value_eur
@@ -158,8 +314,27 @@ def main() -> None:
             )
             if not stock_details:
                 continue
-            quality_tier = "Tier B"
-            val_status = "Fair Value"
+            eval_res = evaluate_stock_quality(stock_details)
+            quality_tier = str(eval_res["tier"])
+            val_status = str(eval_res.get("valuation_status", "Fair Value"))
+
+            with get_db_context(str(db_path)) as conn:
+                cur_t = conn.cursor()
+                cur_t.execute(
+                    "SELECT id FROM assets WHERE isin = ?",
+                    (isin,),
+                )
+                row_asset = cur_t.fetchone()
+                asset_id_val = int(row_asset["id"]) if row_asset else None
+
+                if asset_id_val is not None:
+                    opp_repo.upsert_asset_fundamentals(
+                        asset_id=asset_id_val,
+                        asset_type="STOCK",
+                        details=stock_details,
+                        quality_tier=quality_tier,
+                        quality_score=int(eval_res.get("score", 0)),
+                    )
 
             scored = score_stock(
                 asset=asset,
@@ -193,8 +368,32 @@ def main() -> None:
             )
             if not etf_details:
                 continue
-            quality_tier = "Tier A"
-            val_status = "Fair Value"
+            aum_eur = (
+                (etf_details.fund_size_eur_m or 0.0) * 1_000_000.0
+                if etf_details.fund_size_eur_m
+                else None
+            )
+            etf_eval = evaluate_etf_quality(etf_details, aum_eur=aum_eur)
+            quality_tier = str(etf_eval["tier"])
+            val_status = str(etf_eval.get("valuation_status", "Fair Value"))
+
+            with get_db_context(str(db_path)) as conn:
+                cur_t = conn.cursor()
+                cur_t.execute(
+                    "SELECT id FROM assets WHERE isin = ?",
+                    (isin,),
+                )
+                row_asset = cur_t.fetchone()
+                asset_id_val = int(row_asset["id"]) if row_asset else None
+
+                if asset_id_val is not None:
+                    opp_repo.upsert_asset_fundamentals(
+                        asset_id=asset_id_val,
+                        asset_type="ETF",
+                        details=etf_details,
+                        quality_tier=quality_tier,
+                        quality_score=int(etf_eval.get("score", 0)),
+                    )
             scored = score_etf(
                 asset=asset,
                 details=etf_details,
@@ -262,6 +461,22 @@ def main() -> None:
             f"Score: {item.final_score:.4f} | Action: {rec.action.value:<10} | "
             f"Conf: {rec.confidence_score * 100:>3.0f}% | {rec.reasoning[:50]}..."
         )
+
+    # Generate Markdown Report in reports/analysis_report.md
+    report_file = REPORTS_DIR / "analysis_report.md"
+    _generate_markdown_analysis_report(
+        snapshot=latest_snapshot,
+        scored_assets=scored_assets,
+        assets=assets,
+        sector_pcts=sector_pcts,
+        country_pcts=country_pcts,
+        penalties_map=penalties_map,
+        current_allocations=current_allocations,
+        targets_map=targets_map,
+        output_path=report_file,
+    )
+
+    logger.success("[run analysis] Opportunity analysis pipeline executed successfully.")
 
 
 if __name__ == "__main__":

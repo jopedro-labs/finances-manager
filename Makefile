@@ -57,13 +57,18 @@ analysis-refresh:
 	@$(PYTHON) scripts/run_analysis.py --force-refresh
 	@echo "[make analysis] Step 3: Pushing latest database to Google Drive..."
 	@$(PYTHON) scripts/gdrive_db_sync.py --push
-dashboard:
-	@echo "Computing dashboard overview and performance time-series..."
-	@$(PYTHON) scripts/run_dashboard.py
 
 projections:
-	@echo "Running portfolio wealth and growth projections..."
+	@echo "[make projections] Step 1: Pulling latest database from Google Drive..."
+	@$(PYTHON) scripts/gdrive_db_sync.py --pull
+	@echo "[make projections] Step 2: Running portfolio wealth and growth projections..."
 	@$(PYTHON) scripts/run_projections.py
+
+dashboard:
+	@echo "[make dashboard] Step 1: Pulling latest database from Google Drive..."
+	@$(PYTHON) scripts/gdrive_db_sync.py --pull
+	@echo "[make dashboard] Step 2: Computing dashboard overview and performance time-series..."
+	@$(PYTHON) scripts/run_dashboard.py
 
 gdrive-push:
 	@echo "Pushing database and JSON configs to Google Drive..."

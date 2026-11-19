@@ -179,14 +179,14 @@ class StockProvider:
         asset_id: int | None = None
         resolved_db: Path = Path(db_path) if db_path else Path(DEFAULT_DB_PATH)
 
-        if not force_refresh and resolved_db.exists():
+        if resolved_db.exists():
             try:
                 with get_db_context(str(resolved_db)) as conn:
                     initialize_database(conn)
                     cur = conn.cursor()
                     cur.execute(
-                        "SELECT id FROM assets WHERE yahoo_ticker = ?",
-                        (asset.yahoo_ticker,),
+                        "SELECT id FROM assets WHERE yahoo_ticker = ? OR isin = ?",
+                        (asset.yahoo_ticker, asset.isin),
                     )
                     row = cur.fetchone()
                     if row:
@@ -194,17 +194,20 @@ class StockProvider:
 
                 if asset_id is not None:
                     cache_repo = SqliteOpportunityRepository(db_path=resolved_db)
-                    cached: ETFDetails | StockDetails | None = cache_repo.get_asset_fundamentals(
-                        asset_id=asset_id,
-                        asset_type="STOCK",
-                        ttl_hours=get_settings().stock_cache_ttl_days * 24,
-                    )
-                    if cached is not None and isinstance(cached, StockDetails):
-                        logger.info(
-                            f"[data collectors] Using cached fundamentals for '{asset.yahoo_ticker}' "
-                            f"(asset_id={asset_id})."
+                    if not force_refresh:
+                        cached: ETFDetails | StockDetails | None = (
+                            cache_repo.get_asset_fundamentals(
+                                asset_id=asset_id,
+                                asset_type="STOCK",
+                                ttl_hours=get_settings().stock_cache_ttl_days * 24,
+                            )
                         )
-                        return cached
+                        if cached is not None and isinstance(cached, StockDetails):
+                            logger.info(
+                                f"[data collectors] Using cached fundamentals for '{asset.yahoo_ticker}' "
+                                f"(asset_id={asset_id})."
+                            )
+                            return cached
             except Exception as e:
                 logger.warning(
                     f"[data collectors] Cache lookup failed for '{asset.yahoo_ticker}', "
@@ -300,19 +303,6 @@ class StockProvider:
                 eps_forward=self._parse_float(info, "forwardEps"),
                 currency=self._parse_str(info, "currency"),
             )
-
-            if cache_repo is not None and asset_id is not None:
-                try:
-                    cache_repo.upsert_asset_fundamentals(
-                        asset_id=asset_id,
-                        asset_type="STOCK",
-                        details=result,
-                    )
-                except Exception as cache_err:
-                    logger.warning(
-                        f"[data collectors] Failed to populate fundamentals cache for "
-                        f"'{asset.yahoo_ticker}': {cache_err}"
-                    )
 
             return result
         except Exception as e:
@@ -435,10 +425,12 @@ class ETFProvider:
             logger.error(f"[data collectors] No ISIN provided for ETF asset {asset.name}.")
             return None
 
+        asset_id: int | None = None
+        db_cache_repo: SqliteOpportunityRepository | None = None
         resolved_db: Path = Path(db_path) if db_path else Path(DEFAULT_DB_PATH)
-        if not force_refresh and resolved_db.exists():
+
+        if resolved_db.exists():
             try:
-                asset_id: int | None = None
                 with get_db_context(str(resolved_db)) as conn:
                     initialize_database(conn)
                     cur = conn.cursor()
@@ -452,17 +444,18 @@ class ETFProvider:
 
                 if asset_id is not None:
                     db_cache_repo = SqliteOpportunityRepository(db_path=resolved_db)
-                    db_cached = db_cache_repo.get_asset_fundamentals(
-                        asset_id=asset_id,
-                        asset_type="ETF",
-                        ttl_hours=get_settings().etf_cache_ttl_days * 24,
-                    )
-                    if db_cached is not None and isinstance(db_cached, ETFDetails):
-                        logger.info(
-                            f"[data collectors] Using cached fundamentals for ETF '{asset.isin}' "
-                            f"(asset_id={asset_id})."
+                    if not force_refresh:
+                        db_cached = db_cache_repo.get_asset_fundamentals(
+                            asset_id=asset_id,
+                            asset_type="ETF",
+                            ttl_hours=get_settings().etf_cache_ttl_days * 24,
                         )
-                        return db_cached
+                        if db_cached is not None and isinstance(db_cached, ETFDetails):
+                            logger.info(
+                                f"[data collectors] Using cached fundamentals for ETF '{asset.isin}' "
+                                f"(asset_id={asset_id})."
+                            )
+                            return db_cached
             except Exception as e:
                 logger.warning(
                     f"[data collectors] DB cache lookup failed for ETF '{asset.isin}', "
@@ -477,6 +470,7 @@ class ETFProvider:
         try:
             details: ETFDetails = self.justetf_client.get_etf_details(asset.isin)
             self.cache_repo.save_etf_details(asset.isin, details)
+
             return details
         except Exception as e:
             logger.warning(

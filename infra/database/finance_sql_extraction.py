@@ -43,6 +43,7 @@ class AssetHistoricalRecord:
     asset_type: str
     quantity: float
     value_eur: float
+    invested_eur: float = 0.0
     native_price: float = 0.0
     native_currency: str = "EUR"
 
@@ -54,10 +55,16 @@ class PortfolioHistoricalRecord:
     Attributes:
         snapshot_date: ISO8601 timestamp string of the snapshot.
         total_value_eur: Total portfolio market value in EUR at snapshot time.
+        total_invested_eur: Total portfolio cost/invested capital in EUR at snapshot time.
+        unrealized_pnl_eur: Unrealized gain or loss in EUR at snapshot time.
+        unrealized_pnl_pct: Unrealized percentage return at snapshot time.
     """
 
     snapshot_date: str
     total_value_eur: float
+    total_invested_eur: float = 0.0
+    unrealized_pnl_eur: float = 0.0
+    unrealized_pnl_pct: float = 0.0
 
 
 class FinanceSQLExtractor:
@@ -216,6 +223,10 @@ class FinanceSQLExtractor:
                 qty_col: str = self._resolve_quantity_col(cursor)
                 native_price_expr, native_currency_expr = self._resolve_native_cols(cursor)
 
+                cursor.execute("PRAGMA table_info(asset_snapshots);")  # nosec B608
+                ast_cols: set[str] = {row[1] for row in cursor.fetchall()}
+                invested_col_expr = "ast.invested_eur" if "invested_eur" in ast_cols else "0.0"
+
                 query: str = (
                     f"SELECT s.{date_col} AS snapshot_date, "  # nosec B608
                     f"a.{ticker_col} AS asset_ticker, "
@@ -223,6 +234,7 @@ class FinanceSQLExtractor:
                     f"a.{type_col} AS asset_type, "
                     f"{qty_col} AS quantity, "
                     f"ast.value_eur AS value_eur, "
+                    f"{invested_col_expr} AS invested_eur, "
                     f"{native_price_expr} AS native_price, "
                     f"{native_currency_expr} AS native_currency "
                     f"FROM {snapshot_table} s "
@@ -240,6 +252,7 @@ class FinanceSQLExtractor:
                             asset_type=str(row["asset_type"]),
                             quantity=float(row["quantity"]),
                             value_eur=float(row["value_eur"]),
+                            invested_eur=float(row["invested_eur"]),
                             native_price=float(row["native_price"]),
                             native_currency=str(row["native_currency"]),
                         )
@@ -292,10 +305,16 @@ class FinanceSQLExtractor:
                     if "total_market_value_eur" in snap_cols
                     else "total_value_eur"
                 )
+                total_invested_expr = "s.total_invested_eur" if "total_invested_eur" in snap_cols else "0.0"
+                unrealized_pnl_expr = "s.unrealized_pnl_eur" if "unrealized_pnl_eur" in snap_cols else "0.0"
+                unrealized_pct_expr = "s.unrealized_pnl_pct" if "unrealized_pnl_pct" in snap_cols else "0.0"
 
                 query: str = (
                     f"SELECT s.{date_col} AS snapshot_date, "  # nosec B608
-                    f"s.{total_value_col} AS total_value_eur "
+                    f"s.{total_value_col} AS total_value_eur, "
+                    f"{total_invested_expr} AS total_invested_eur, "
+                    f"{unrealized_pnl_expr} AS unrealized_pnl_eur, "
+                    f"{unrealized_pct_expr} AS unrealized_pnl_pct "
                     f"FROM {snapshot_table} s "
                     f"WHERE s.{total_value_col} > 0 "
                     f"AND ({baseline_clause} OR ("
@@ -311,6 +330,9 @@ class FinanceSQLExtractor:
                         PortfolioHistoricalRecord(
                             snapshot_date=str(row["snapshot_date"]),
                             total_value_eur=float(row["total_value_eur"]),
+                            total_invested_eur=float(row["total_invested_eur"]),
+                            unrealized_pnl_eur=float(row["unrealized_pnl_eur"]),
+                            unrealized_pnl_pct=float(row["unrealized_pnl_pct"]),
                         )
                     )
             return records

@@ -207,14 +207,21 @@ class PortfolioAnalyticsEngine:
         for ticker, rec in latest_records.items():
             matched_asset: Asset | None = assets_by_ticker.get(ticker)
 
-            native_value: float = rec.native_price * rec.quantity
-            eur_rate: float = rec.value_eur / native_value if native_value > 0 else 1.0
-
-            cost_basis: float = (
-                matched_asset.quantity * matched_asset.average_buy_price * eur_rate
-                if matched_asset
-                else 0.0
-            )
+            if rec.invested_eur > 0.0:
+                cost_basis: float = rec.invested_eur
+            else:
+                from core_lib.logger import logger
+                logger.warning(
+                    f"[portfolio analytics] Asset '{ticker}' has no recorded invested_eur "
+                    f"in snapshot {rec.snapshot_date}. Falling back to estimated cost basis."
+                )
+                native_value: float = rec.native_price * rec.quantity
+                eur_rate: float = rec.value_eur / native_value if native_value > 0 else 1.0
+                cost_basis = (
+                    matched_asset.quantity * matched_asset.average_buy_price * eur_rate
+                    if matched_asset
+                    else 0.0
+                )
 
             val: float = rec.value_eur
             roi_eur: float = val - cost_basis
@@ -271,6 +278,10 @@ class PortfolioAnalyticsEngine:
         )
 
         latest_total: float = portfolio_records[-1].total_value_eur if portfolio_records else 0.0
+        latest_inv: float = portfolio_records[-1].total_invested_eur if portfolio_records else 0.0
+        latest_pnl: float = portfolio_records[-1].unrealized_pnl_eur if portfolio_records else 0.0
+        latest_pct: float = portfolio_records[-1].unrealized_pnl_pct if portfolio_records else 0.0
+
         summaries: list[AssetPerformanceSummary] = self.compute_asset_summaries(
             asset_records, assets_config, latest_total
         )
@@ -289,4 +300,7 @@ class PortfolioAnalyticsEngine:
             asset_summaries=summaries,
             top_growth_contributor=top_contributor,
             max_drawdown_percent=max_drawdown,
+            latest_invested_eur=latest_inv,
+            latest_unrealized_pnl_eur=latest_pnl,
+            latest_unrealized_pnl_pct=latest_pct,
         )

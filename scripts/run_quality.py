@@ -296,7 +296,7 @@ def load_target_assets(db_path: Path) -> list[Asset]:
     """
     if db_path.exists():
         sqlite_repo = SqlitePortfolioRepository(db_path)
-        assets = sqlite_repo.load_assets()
+        assets = sqlite_repo.load_all_assets()
         if assets:
             logger.info(f"[run quality] Loaded {len(assets)} active assets from SQLite database.")
             return assets

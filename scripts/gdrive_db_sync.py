@@ -3,7 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
+
+# Ensure root directory is in pythonpath
+_ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(_ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(_ROOT_DIR))
 
 from core_lib.gdrive.gdrive_service import GDriveService
 from core_lib.logger import logger

@@ -101,6 +101,40 @@ class SqlitePortfolioRepository:
                 f"[repositories] Failed to read portfolio assets from '{self.db_path}': {e}"
             ) from e
 
+    def load_all_assets(self) -> list[Asset]:
+        """Loads all portfolio assets from SQLite, including watchlist items (quantity >= 0).
+
+        Returns:
+            A list of Asset instances parsed from database rows.
+        """
+        if not self.db_path.exists():
+            return []
+
+        try:
+            with get_db_context(str(self.db_path)) as conn:
+                initialize_database(conn)
+                cursor = conn.cursor()
+                cursor.execute(
+                    "SELECT isin, name, yahoo_ticker, quantity, "
+                    "average_buy_price, asset_type FROM assets ORDER BY id ASC"
+                )
+                rows = cursor.fetchall()
+                return [
+                    Asset(
+                        name=str(row["name"]),
+                        isin=str(row["isin"] or ""),
+                        yahoo_ticker=str(row["yahoo_ticker"]),
+                        quantity=float(row["quantity"]),
+                        average_buy_price=float(row["average_buy_price"]),
+                        asset_type=str(row["asset_type"]),
+                    )
+                    for row in rows
+                ]
+        except Exception as e:
+            raise StorageReadError(
+                f"[repositories] Failed to read all assets from '{self.db_path}': {e}"
+            ) from e
+
     def get_asset_by_isin(self, isin: str) -> Asset | None:
         """Retrieves a single portfolio asset by its ISIN identifier.
 

@@ -89,6 +89,24 @@ class Settings(BaseSettings):
     alloc_gap_normalizer_pct: float = Field(default=15.0, alias="ALLOC_GAP_NORMALIZER_PCT")
     snapshot_freshness_hours: int = Field(default=48, alias="SNAPSHOT_FRESHNESS_HOURS")
 
+    # Projections Settings
+    monthly_contribution: float = Field(default=300.0, alias="MONTHLY_CONTRIBUTION")
+    inflation_rate: float = Field(default=0.02, alias="INFLATION_RATE")
+
+    @field_validator("monthly_contribution", mode="before")
+    @classmethod
+    def validate_monthly_contribution(cls, v: Any) -> float:
+        if v is None or v == "":
+            return 300.0
+        return float(v)
+
+    @field_validator("inflation_rate", mode="before")
+    @classmethod
+    def validate_inflation_rate(cls, v: Any) -> float:
+        if v is None or v == "":
+            return 0.02
+        return float(v)
+
     @field_validator("gdrive_data_folder_id", "gdrive_snapshots_folder_id")
     @classmethod
     def validate_folder_ids(cls, v: str | None) -> str | None:
