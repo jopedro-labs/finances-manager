@@ -11,11 +11,11 @@ _ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(_ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(_ROOT_DIR))
 
-from core_lib.gdrive.gdrive_service import GDriveService
-from core_lib.logger import logger
+from core_lib.gdrive.gdrive_service import GDriveService  # noqa: E402
+from core_lib.logger import logger  # noqa: E402
 
-from config import get_settings
-from infra.database.connection import DEFAULT_DB_PATH
+from config import get_settings  # noqa: E402
+from infra.database.connection import DEFAULT_DB_PATH  # noqa: E402
 
 settings = get_settings()
 

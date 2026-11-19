@@ -6,6 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from config import get_settings
+from core.common.constants import SECTOR_ALIASES
 from core.data_collectors import ETFProvider, StockProvider
 from core.models import Asset, ETFDetails, PortfolioSnapshot, StockDetails
 from core.repositories import PortfolioRepository, SqlitePortfolioRepository
@@ -93,7 +94,8 @@ class ExposureEngine:
                     mapped_sector_val: float = 0.0
                     if details.sector_breakdown:
                         for sector in details.sector_breakdown:
-                            sec_name: str = sector.sector_name
+                            raw_sec_name: str = sector.sector_name.strip()
+                            sec_name: str = SECTOR_ALIASES.get(raw_sec_name.upper(), raw_sec_name)
                             sec_weight: float = sector.weight_pct / 100.0
                             sec_weighted_val: float = asset_val * sec_weight
                             sector_totals[sec_name] = (
@@ -130,8 +132,11 @@ class ExposureEngine:
                 stock_details: StockDetails | None = self._stock_provider.get_details(
                     asset, db_path=self._db_path
                 )
-                stock_sector_name: str = (
+                raw_stock_sector: str = (
                     stock_details.sector if stock_details and stock_details.sector else "Unknown"
+                )
+                stock_sector_name: str = SECTOR_ALIASES.get(
+                    raw_stock_sector.upper(), raw_stock_sector
                 )
                 sector_totals[stock_sector_name] = (
                     sector_totals.get(stock_sector_name, 0.0) + asset_val

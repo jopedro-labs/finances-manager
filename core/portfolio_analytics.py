@@ -211,6 +211,7 @@ class PortfolioAnalyticsEngine:
                 cost_basis: float = rec.invested_eur
             else:
                 from core_lib.logger import logger
+
                 logger.warning(
                     f"[portfolio analytics] Asset '{ticker}' has no recorded invested_eur "
                     f"in snapshot {rec.snapshot_date}. Falling back to estimated cost basis."

@@ -305,9 +305,15 @@ class FinanceSQLExtractor:
                     if "total_market_value_eur" in snap_cols
                     else "total_value_eur"
                 )
-                total_invested_expr = "s.total_invested_eur" if "total_invested_eur" in snap_cols else "0.0"
-                unrealized_pnl_expr = "s.unrealized_pnl_eur" if "unrealized_pnl_eur" in snap_cols else "0.0"
-                unrealized_pct_expr = "s.unrealized_pnl_pct" if "unrealized_pnl_pct" in snap_cols else "0.0"
+                total_invested_expr = (
+                    "s.total_invested_eur" if "total_invested_eur" in snap_cols else "0.0"
+                )
+                unrealized_pnl_expr = (
+                    "s.unrealized_pnl_eur" if "unrealized_pnl_eur" in snap_cols else "0.0"
+                )
+                unrealized_pct_expr = (
+                    "s.unrealized_pnl_pct" if "unrealized_pnl_pct" in snap_cols else "0.0"
+                )
 
                 query: str = (
                     f"SELECT s.{date_col} AS snapshot_date, "  # nosec B608

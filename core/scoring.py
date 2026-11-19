@@ -243,6 +243,11 @@ def build_recommendation(
             confidence = 0.60
             urgency = UrgencyLevel.MEDIUM
             reason = f"Tier B solid asset trading undervalued; opportunistic rebalance of +{alloc_gap_pct:.1f}%."
+        elif under_allocated:
+            action = RecommendationAction.BUY
+            confidence = 0.60
+            urgency = UrgencyLevel.MEDIUM
+            reason = f"Tier B solid asset ({norm_val.title()}) under target weight by {alloc_gap_pct:.1f}%; accumulating position."
         elif "OVERVALUED" in norm_val and not under_allocated:
             action = RecommendationAction.HOLD_REBALANCE
             confidence = 0.80

@@ -373,7 +373,14 @@ def main() -> None:
                 if etf_details.fund_size_eur_m
                 else None
             )
-            etf_eval = evaluate_etf_quality(etf_details, aum_eur=aum_eur)
+            # Calculate fund age for consistent tier evaluation
+            age_years: float | None = None
+            if etf_details.inception_date:
+                from scripts.run_quality import _calculate_age_years
+
+                age_years = _calculate_age_years(etf_details.inception_date)
+
+            etf_eval = evaluate_etf_quality(etf_details, aum_eur=aum_eur, age_years=age_years)
             quality_tier = str(etf_eval["tier"])
             val_status = str(etf_eval.get("valuation_status", "Fair Value"))
 

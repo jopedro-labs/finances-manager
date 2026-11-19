@@ -274,10 +274,17 @@ def evaluate_stock_quality(details: StockDetails) -> dict[str, Any]:
         bear_points.append("Slow or stagnant top-line revenue growth")
 
     if debt_eq is not None:
-        if debt_eq <= 100.0:
-            bull_points.append("Conservative capital structure and low leverage")
+        pct_de = debt_eq if debt_eq > 5.0 else debt_eq * 100.0
+        if pct_de <= 80.0:
+            bull_points.append(
+                f"Conservative capital structure and low leverage (D/E: {pct_de:.1f}%)"
+            )
+        elif pct_de <= 150.0:
+            bull_points.append(
+                f"Moderate leverage aligned with industry averages (D/E: {pct_de:.1f}%)"
+            )
         else:
-            bear_points.append(f"Elevated debt-to-equity ratio ({debt_eq:.1f})")
+            bear_points.append(f"Elevated debt-to-equity leverage ratio (D/E: {pct_de:.1f}%)")
     else:
         bear_points.append("Debt and leverage metrics unavailable")
 
@@ -357,17 +364,30 @@ def evaluate_etf_quality(
     ter_str: str = f"{ter:.2f}%" if ter is not None else "N/A"
     aum_str: str = f"{aum_eur / 1e6:,.1f}M€" if aum_eur is not None else "N/A"
 
+    bull_points: list[str] = []
+    bear_points: list[str] = []
+
+    if ter is not None and ter <= 0.25:
+        bull_points.append(f"Attractive cost efficiency (TER: {ter_str})")
+    elif ter is not None and ter > 0.45:
+        bear_points.append(f"Elevated fund total expense ratio (TER: {ter_str})")
+    else:
+        bull_points.append(f"Balanced cost structure (TER: {ter_str})")
+
+    if aum_eur is not None and aum_eur >= 500_000_000.0:
+        bull_points.append(f"High fund scale and deep liquidity (AUM: {aum_str})")
+    elif aum_eur is not None and aum_eur < 100_000_000.0:
+        bear_points.append(f"Small fund scale / closure risk (AUM: {aum_str})")
+    else:
+        bull_points.append(f"Adequate fund scale and liquidity (AUM: {aum_str})")
+
+    bear_points.append("Market systemic exposure without individual stock selection")
+
     return {
         "score": 100 if tier == "Tier A" else (70 if tier == "Tier B" else 40),
         "max_score": 100,
         "tier": tier,
-        "bull_case": [
-            f"Attractive cost efficiency (TER: {ter_str})",
-            f"Fund scale and liquidity (AUM: {aum_str})",
-        ],
-        "bear_case": [
-            "Market systemic exposure without individual stock selection",
-            "Regulatory or structural tracking risks",
-        ],
+        "bull_case": bull_points,
+        "bear_case": bear_points,
         "valuation_status": "Fair Value",
     }

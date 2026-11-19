@@ -11,15 +11,15 @@ _ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(_ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(_ROOT_DIR))
 
-from core_lib.logger import logger
+from core_lib.logger import logger  # noqa: E402
 
-from config import REPORTS_DIR, get_settings
-from core.models import DashboardOverview
-from core.portfolio_analytics import PortfolioAnalyticsEngine
-from core.repositories import SqlitePortfolioRepository
-from infra.database.connection import get_db_context
-from infra.database.finance_sql_extraction import FinanceSQLExtractor
-from infra.database.schema import initialize_database
+from config import REPORTS_DIR, get_settings  # noqa: E402
+from core.models import DashboardOverview  # noqa: E402
+from core.portfolio_analytics import PortfolioAnalyticsEngine  # noqa: E402
+from core.repositories import SqlitePortfolioRepository  # noqa: E402
+from infra.database.connection import get_db_context  # noqa: E402
+from infra.database.finance_sql_extraction import FinanceSQLExtractor  # noqa: E402
+from infra.database.schema import initialize_database  # noqa: E402
 
 
 def _generate_markdown_dashboard_report(
@@ -97,11 +97,13 @@ def _generate_markdown_dashboard_report(
     for class_ts in overview.class_series:
         latest_val = class_ts.value_history[-1].value if class_ts.value_history else 0.0
         latest_share = class_ts.share_history[-1].value if class_ts.share_history else 0.0
-        md.append(f"### {class_ts.asset_type} Class (Current: €{latest_val:,.2f} — {latest_share:.2f}%)")
+        md.append(
+            f"### {class_ts.asset_type} Class (Current: €{latest_val:,.2f} — {latest_share:.2f}%)"
+        )
         md.append("")
         md.append("| Snapshot Date | Valuation (€) | Portfolio Share (%) |")
         md.append("|---|---|---|")
-        for val_pt, share_pt in zip(class_ts.value_history, class_ts.share_history):
+        for val_pt, share_pt in zip(class_ts.value_history, class_ts.share_history, strict=False):
             md.append(f"| {val_pt.date} | €{val_pt.value:,.2f} | {share_pt.value:.2f}% |")
         md.append("")
 
@@ -116,8 +118,10 @@ def _generate_markdown_dashboard_report(
         ]
     )
 
-    for val_pt, ath_pt, dd_pt in zip(val_history, ath_history, dd_history):
-        md.append(f"| {val_pt.date} | €{val_pt.value:,.2f} | €{ath_pt.value:,.2f} | {dd_pt.value:.2f}% |")
+    for val_pt, ath_pt, dd_pt in zip(val_history, ath_history, dd_history, strict=False):
+        md.append(
+            f"| {val_pt.date} | €{val_pt.value:,.2f} | €{ath_pt.value:,.2f} | {dd_pt.value:.2f}% |"
+        )
 
     md.append("")
 

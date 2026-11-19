@@ -40,9 +40,11 @@ input/ (XTB screenshot)
                     └── data/finances.db
 
 data/finances.db
-    ├── make quality   → scripts/run_quality.py   → reports/quality_report.md
-    ├── make analysis  → scripts/run_analysis.py  → terminal performance metrics
-    └── make report    → scripts/generate_portfolio_report.py → reports/YYYY-MM-DD.md / .html
+    ├── make quality       → scripts/run_quality.py               → reports/quality_report.md
+    ├── make analysis      → scripts/run_analysis.py              → reports/analysis_report.md
+    ├── make dashboard     → scripts/run_dashboard.py             → reports/dashboard_report.md
+    ├── make projections   → scripts/run_projections.py           → reports/projections_report.md
+    └── make report        → scripts/generate_portfolio_report.py → reports/YYYY-MM-DD.md / .html
 ```
 
 ### Gemini Agents (`.gemini/agents/`)
@@ -67,11 +69,14 @@ data/finances.db
 | `scripts/extract_xtb_open_positions.py`| Gemini Vision extraction → parses positions from input screenshot          |
 | `scripts/run_snapshot.py`              | Persists structured snapshot to SQLite `finances.db` → syncs to GDrive     |
 | `scripts/run_quality.py`               | Fundamental quality tier evaluation (Tier A/B/C) + quality report generator|
-| `scripts/run_analysis.py`              | Portfolio performance and value-weighted exposure analysis                 |
-| `scripts/generate_portfolio_report.py` | Calls Gemini with analyst + reporter instructions → saves report           |
+| `scripts/run_analysis.py`              | Opportunity scoring, policy exposure caps validation & analysis report      |
+| `scripts/run_dashboard.py`             | Portfolio ATH, maximum drawdowns, time-series metrics & dashboard report   |
+| `scripts/run_projections.py`           | Multi-horizon compound growth and wealth accumulation simulations          |
+| `scripts/generate_portfolio_report.py` | Calls Gemini with analyst + reporter instructions (or deterministic engine) |
 | `scripts/gdrive_db_sync.py`            | SQLite database synchronization with Google Drive (`--push` / `--pull`)    |
 | `scripts/gdrive_jsons_sync.py`         | JSON configs synchronization with Google Drive (`--push` / `--pull`)      |
-| `reports/`                             | Generated reports — `YYYY-MM-DD.md`, `.html`, and `quality_report.md`      |
+| `scripts/migrate_json_to_sqlite.py`    | Portfolio configuration seed reconciliation into SQLite database           |
+| `reports/`                             | Generated reports — `YYYY-MM-DD.md`, `.html`, `quality_report.md`, etc.    |
 | `config.py`                            | Centralised settings via pydantic-settings (paths + env vars)              |
 | `stubs/`                               | Local type stubs for untyped third-party libraries                         |
 | `.env`                                 | Local environment variables (not committed)                                |
@@ -132,14 +137,26 @@ make quality          # Evaluates fundamental metrics and generates reports/qual
 make quality-refresh  # Forces live API fetch bypassing local cache
 ```
 
-### 3. Run Portfolio Performance Analysis
+### 3. Run Portfolio Performance & Opportunity Analysis
 
 ```bash
-make analysis         # Evaluates performance and exposures against latest snapshot
+make analysis         # Evaluates performance, exposure limits and generates reports/analysis_report.md
 make analysis-refresh # Forces live refresh before running performance analysis
 ```
 
-### 4. Generate AI Portfolio Report
+### 4. Run Dashboard Metrics & Time-Series
+
+```bash
+make dashboard        # Computes ATH, drawdowns, asset class evolution and reports/dashboard_report.md
+```
+
+### 5. Run Long-Term Wealth Projections
+
+```bash
+make projections      # Simulates 10/20/30-year compound growth and generates reports/projections_report.md
+```
+
+### 6. Generate AI Portfolio Report
 
 ```bash
 make report       # Markdown — saved to reports/YYYY-MM-DD.md
@@ -147,11 +164,17 @@ make report-html  # HTML     — saved to reports/YYYY-MM-DD.html
 make report-md    # Markdown — alias for make report
 ```
 
-### 5. Google Drive Synchronization
+### 7. Google Drive Synchronization
 
 ```bash
 make gdrive-pull  # Pull latest database and JSON configs from Google Drive
 make gdrive-push  # Push local database and JSON configs to Google Drive
+```
+
+### 8. Database Reconciliation & Migration
+
+```bash
+make migrate      # Reconciles assets from data/portfolio.json into the SQLite database
 ```
 
 ---

@@ -12,13 +12,13 @@ _ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(_ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(_ROOT_DIR))
 
-from core_lib.logger import logger
+from core_lib.logger import logger  # noqa: E402
 
-from config import REPORTS_DIR, get_settings
-from core.projections import ProjectionEngine
-from infra.database.connection import get_db_context
-from infra.database.finance_sql_extraction import FinanceSQLExtractor
-from infra.database.schema import initialize_database
+from config import REPORTS_DIR, get_settings  # noqa: E402
+from core.projections import ProjectionEngine  # noqa: E402
+from infra.database.connection import get_db_context  # noqa: E402
+from infra.database.finance_sql_extraction import FinanceSQLExtractor  # noqa: E402
+from infra.database.schema import initialize_database  # noqa: E402
 
 SCENARIOS = [
     ("Conservative", 0.05),
@@ -61,14 +61,10 @@ def _generate_markdown_projections_report(
             if s[0] == "Conservative"
         )
         r_val = next(
-            s[2].milestones[horizon].projected_value
-            for s in scenarios_data
-            if s[0] == "Realistic"
+            s[2].milestones[horizon].projected_value for s in scenarios_data if s[0] == "Realistic"
         )
         o_val = next(
-            s[2].milestones[horizon].projected_value
-            for s in scenarios_data
-            if s[0] == "Optimistic"
+            s[2].milestones[horizon].projected_value for s in scenarios_data if s[0] == "Optimistic"
         )
         md.append(
             f"| **{horizon} Years** | €{c_val:,.0f} | **€{r_val:,.0f}** | €{o_val:,.0f} | €{total_invested:,.0f} |"
@@ -120,7 +116,9 @@ def main() -> None:
     portfolio_history = extractor.fetch_portfolio_history()
 
     current_val = portfolio_history[-1].total_value_eur if portfolio_history else 10000.0
-    logger.info(f"[run projections] Baseline valuation: {current_val:,.2f} EUR (SQLite Source of Truth)")
+    logger.info(
+        f"[run projections] Baseline valuation: {current_val:,.2f} EUR (SQLite Source of Truth)"
+    )
 
     engine = ProjectionEngine()
     scenarios_data: list[tuple[str, float, Any]] = []

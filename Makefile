@@ -20,7 +20,8 @@ help:
 	@echo "  make report           - Generate daily report as Markdown saved to reports/"
 	@echo "  make report-html      - Generate report as HTML saved to reports/"
 	@echo "  make report-md        - Generate report as Markdown saved to reports/ (alias)"
-	@echo "  make migrate          - Reconcile portfolio seed JSON into SQLite database\n\t@echo "  make clean            - Remove generated files (reports/, temp snapshot)"
+	@echo "  make migrate          - Reconcile portfolio seed JSON into SQLite database"
+	@echo "  make clean            - Remove generated files (reports/, temp snapshot)"
 	@echo "  make lint             - Run ruff (lint + format check) and mypy (type check)"
 	@echo "  make security         - Run bandit security scan"
 

@@ -90,3 +90,37 @@ COUNTRY_ALIASES: dict[str, str] = {
     "ITALY": "Italy",
     "IT": "Italy",
 }
+
+SECTOR_ALIASES: dict[str, str] = {
+    # Financials
+    "FINANCE": "Financial Services",
+    "FINANCIAL": "Financial Services",
+    "FINANCIALS": "Financial Services",
+    "FINANCIAL SERVICES": "Financial Services",
+    # Technology
+    "INFORMATION TECHNOLOGY": "Technology",
+    "IT": "Technology",
+    "TECH": "Technology",
+    # Healthcare
+    "HEALTH CARE": "Healthcare",
+    "HEALTHCARE": "Healthcare",
+    # Consumer
+    "CONSUMER DISCRETIONARY": "Consumer Cyclical",
+    "CONSUMER CYCLICAL": "Consumer Cyclical",
+    "CONSUMER STAPLES": "Consumer Defensive",
+    "CONSUMER DEFENSIVE": "Consumer Defensive",
+    # Communications
+    "COMMUNICATION SERVICES": "Communication Services",
+    "TELECOMMUNICATION SERVICES": "Communication Services",
+    "TELECOMMUNICATIONS": "Communication Services",
+    # Materials & Industry
+    "BASIC MATERIALS": "Basic Materials",
+    "MATERIALS": "Basic Materials",
+    "NON-ENERGY MATERIALS": "Basic Materials",
+    "INDUSTRIALS": "Industrials",
+    "INDUSTRIAL": "Industrials",
+    # Energy & Utilities
+    "ENERGY": "Energy",
+    "UTILITIES": "Utilities",
+    "REAL ESTATE": "Real Estate",
+}
