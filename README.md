@@ -1,18 +1,32 @@
 # finances-manager
 
+![Python 3.13+](https://img.shields.io/badge/python-3.13+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Version](https://img.shields.io/badge/version-0.1.0-58a6ff?style=flat-square)
+![Lint Workflow](https://github.com/jopedro-labs/finances-manager/actions/workflows/lint.yml/badge.svg)
+![SQLite](https://img.shields.io/badge/database-SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+<br />
+![Linter](https://img.shields.io/badge/linter-Ruff-000000?style=flat-square&logo=python&logoColor=white)
+![Type Check](https://img.shields.io/badge/types-mypy%20strict-2A6DB2?style=flat-square&logo=python&logoColor=white)
+![Security](https://img.shields.io/badge/security-Bandit-black?style=flat-square)
+![Gemini AI](https://img.shields.io/badge/Gemini_AI-8E75B2?style=flat-square&logo=googlegemini&logoColor=white)
+![GNU Make](https://img.shields.io/badge/env-GNU%20Make-active?style=flat-square&logo=gnu-make&logoColor=white)
+![MIT License](https://img.shields.io/badge/license-MIT-607D8B?style=flat-square)
+
 AI-driven investment portfolio manager powered by Google Gemini. Captures portfolio snapshots from XTB screenshots, applies quantitative scoring rules, and generates daily analysis reports in HTML or Markdown.
 
 ---
 
 ## Overview
 
-The system is built around two independent pipelines:
+The system is built around three integrated pipelines:
 
-**Snapshot pipeline** — sends an XTB "Open Positions" screenshot to Gemini Vision, extracts structured position data, calculates totals and allocation gaps, and appends the result to a historical log synced to Google Drive.
+**Snapshot pipeline** — sends an XTB "Open Positions" screenshot to Gemini Vision, extracts structured position data, calculates totals and allocation gaps, persists the snapshot into the local SQLite database (`data/finances.db`), and backs it up to Google Drive.
 
-**Report pipeline** — reads the historical snapshot data, applies the scoring and allocation rules defined in `data/rules.md`, and produces a structured report with KPIs, per-asset recommendations, and long-term projections.
+**Quality & Analytics pipeline** — evaluates fundamental quality tiers (Tier A/B/C) for stocks and ETFs (`make quality`), analyzes overall portfolio ROI, exposures, and historical performance (`make analysis`), generating structured reports in `reports/`.
 
-All analysis logic runs inside Gemini agents. There is no Python engine for scoring or recommendations — Python handles only extraction, persistence, and infrastructure.
+**Report pipeline** — reads historical snapshot and fundamental data, applies the scoring and allocation rules defined in `data/rules.md`, and produces a structured AI report with KPIs, per-asset recommendations, and long-term projections (`make report`).
+
+The system combines a deterministic Python engine for exact P&L, exposure calculations, and fundamental scoring with Gemini agents for multimodal vision extraction and narrative intelligence.
 
 ---
 
@@ -21,14 +35,16 @@ All analysis logic runs inside Gemini agents. There is no Python engine for scor
 ```
 input/ (XTB screenshot)
     └── make snapshot
-            ├── scripts/extract_with_gemini.py   ← Gemini Vision extraction
-            └── scripts/snapshot.py              ← persists + GDrive sync
-                    └── snapshots/snapshots.json
+            ├── scripts/extract_xtb_open_positions.py   ← Gemini Vision extraction
+            └── scripts/run_snapshot.py                 ← persists to SQLite + GDrive backup
+                    └── data/finances.db
 
-snapshots/snapshots.json
-    └── make report
-            └── scripts/generate_portfolio_report.py   ← Gemini analysis
-                    └── reports/YYYY-MM-DD.md / .html
+data/finances.db
+    ├── make quality       → scripts/run_quality.py               → reports/quality_report.md
+    ├── make analysis      → scripts/run_analysis.py              → reports/analysis_report.md
+    ├── make dashboard     → scripts/run_dashboard.py             → reports/dashboard_report.md
+    ├── make projections   → scripts/run_projections.py           → reports/projections_report.md
+    └── make report        → scripts/generate_portfolio_report.py → reports/YYYY-MM-DD.md / .html
 ```
 
 ### Gemini Agents (`.gemini/agents/`)
@@ -36,7 +52,6 @@ snapshots/snapshots.json
 | Agent       | Responsibility                                                        |
 |-------------|-----------------------------------------------------------------------|
 | `extractor` | Reads the XTB screenshot and extracts structured position data        |
-| `snapshot`  | Calculates totals, allocations, costs and persists the snapshot       |
 | `analyst`   | Applies `data/rules.md` — scores, tiers, recommendations, projections |
 | `reporter`  | Renders the final report in HTML or Markdown                          |
 
@@ -50,16 +65,19 @@ snapshots/snapshots.json
 | `data/portfolio.json`                  | Master list of holdings — ISIN, tickers, quantity, average buy price       |
 | `data/portfolio_targets.json`          | Target allocation (%) per asset — drives rebalancing scores                |
 | `data/rules.md`                        | Business rules: scoring formulas, decision matrix, projections, governance |
-| `snapshots/snapshots.json`             | Historical snapshot log with P&L, market values and allocations            |
-| `scripts/extract_with_gemini.py`       | Gemini Vision extraction → writes temp JSON → triggers `snapshot.py`       |
-| `scripts/snapshot.py`                  | Reads temp JSON → appends `snapshots.json` → syncs to GDrive               |
-| `scripts/generate_portfolio_report.py` | Calls Gemini with analyst + reporter instructions → saves report           |
-| `reports/`                             | Generated reports — `YYYY-MM-DD.md` or `YYYY-MM-DD.html` (gitignored)     |
+| `data/finances.db`                     | SQLite database: master assets, snapshots, fundamental history, and cache  |
+| `scripts/extract_xtb_open_positions.py`| Gemini Vision extraction → parses positions from input screenshot          |
+| `scripts/run_snapshot.py`              | Persists structured snapshot to SQLite `finances.db` → syncs to GDrive     |
+| `scripts/run_quality.py`               | Fundamental quality tier evaluation (Tier A/B/C) + quality report generator|
+| `scripts/run_analysis.py`              | Opportunity scoring, policy exposure caps validation & analysis report      |
+| `scripts/run_dashboard.py`             | Portfolio ATH, maximum drawdowns, time-series metrics & dashboard report   |
+| `scripts/run_projections.py`           | Multi-horizon compound growth and wealth accumulation simulations          |
+| `scripts/generate_portfolio_report.py` | Calls Gemini with analyst + reporter instructions (or deterministic engine) |
+| `scripts/gdrive_db_sync.py`            | SQLite database synchronization with Google Drive (`--push` / `--pull`)    |
+| `scripts/gdrive_jsons_sync.py`         | JSON configs synchronization with Google Drive (`--push` / `--pull`)      |
+| `scripts/migrate_json_to_sqlite.py`    | Portfolio configuration seed reconciliation into SQLite database           |
+| `reports/`                             | Generated reports — `YYYY-MM-DD.md`, `.html`, `quality_report.md`, etc.    |
 | `config.py`                            | Centralised settings via pydantic-settings (paths + env vars)              |
-| `infra/gdrive/`                        | Google Drive OAuth2 integration (upload, download, sync)                   |
-| `infra/logger/`                        | ANSI-coloured terminal logger (`logger` singleton)                         |
-| `infra/utils/`                         | File I/O utilities (`load_file_content`)                                   |
-| `stubs/`                               | Local type stubs for untyped third-party libraries                         |
 | `.env`                                 | Local environment variables (not committed)                                |
 | `secrets/`                             | OAuth2 credentials (`credentials.json`) and session token (`token.json`)   |
 
@@ -101,7 +119,7 @@ GDRIVE_SNAPSHOTS_FOLDER_ID=your_gdrive_snapshots_folder_id
 
 ## Usage
 
-### Capture a snapshot
+### 1. Capture a snapshot
 
 Place an XTB "Open Positions" screenshot in `input/` then run:
 
@@ -109,14 +127,53 @@ Place an XTB "Open Positions" screenshot in `input/` then run:
 make snapshot
 ```
 
-This sends the screenshot to Gemini Vision, extracts position data, calculates totals and allocation gaps against targets, and appends the result to `snapshots/snapshots.json`, syncing to Google Drive.
+This sends the screenshot to Gemini Vision, extracts position data, calculates totals and allocation gaps against targets, appends the result to SQLite (`data/finances.db`), and syncs to Google Drive.
 
-### Generate a report
+### 2. Run Fundamental Quality Audit
+
+```bash
+make quality          # Evaluates fundamental metrics and generates reports/quality_report.md
+make quality-refresh  # Forces live API fetch bypassing local cache
+```
+
+### 3. Run Portfolio Performance & Opportunity Analysis
+
+```bash
+make analysis         # Evaluates performance, exposure limits and generates reports/analysis_report.md
+make analysis-refresh # Forces live refresh before running performance analysis
+```
+
+### 4. Run Dashboard Metrics & Time-Series
+
+```bash
+make dashboard        # Computes ATH, drawdowns, asset class evolution and reports/dashboard_report.md
+```
+
+### 5. Run Long-Term Wealth Projections
+
+```bash
+make projections      # Simulates 10/20/30-year compound growth and generates reports/projections_report.md
+```
+
+### 6. Generate AI Portfolio Report
 
 ```bash
 make report       # Markdown — saved to reports/YYYY-MM-DD.md
 make report-html  # HTML     — saved to reports/YYYY-MM-DD.html
 make report-md    # Markdown — alias for make report
+```
+
+### 7. Google Drive Synchronization
+
+```bash
+make gdrive-pull  # Pull latest database and JSON configs from Google Drive
+make gdrive-push  # Push local database and JSON configs to Google Drive
+```
+
+### 8. Database Reconciliation & Migration
+
+```bash
+make migrate      # Reconciles assets from data/portfolio.json into the SQLite database
 ```
 
 ---

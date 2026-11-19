@@ -1,0 +1,598 @@
+{
+  "IE00B4L5Y983": {
+    "cached_at": "2026-11-19T13:53:52.656895+00:00",
+    "details": {
+      "holdings": [
+        {
+          "name": "NVIDIA Corp.",
+          "isin": "US67066G1040",
+          "weight_pct": 5.79,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Apple",
+          "isin": "US0378331005",
+          "weight_pct": 5.39,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Microsoft Corp",
+          "isin": "US5949181045",
+          "weight_pct": 3.99,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Amazon.com, Inc.",
+          "isin": "US0231351067",
+          "weight_pct": 2.66,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Alphabet, Inc. A",
+          "isin": "US02079K3059",
+          "weight_pct": 2.23,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Meta Platforms",
+          "isin": "US30303M1027",
+          "weight_pct": 1.76,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Alphabet, Inc. C",
+          "isin": "US02079K1079",
+          "weight_pct": 1.76,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Broadcom Inc.",
+          "isin": "US11135F1012",
+          "weight_pct": 1.75,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Micron Technology",
+          "isin": "US5951121038",
+          "weight_pct": 1.33,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Tesla",
+          "isin": "US88160R1014",
+          "weight_pct": 1.12,
+          "just_etf_ticker": null
+        }
+      ],
+      "sector_breakdown": [
+        {
+          "sector_name": "Technology",
+          "weight_pct": 37.77
+        },
+        {
+          "sector_name": "Finance",
+          "weight_pct": 17.22
+        },
+        {
+          "sector_name": "Industrials",
+          "weight_pct": 9.32
+        },
+        {
+          "sector_name": "Healthcare",
+          "weight_pct": 8.95
+        },
+        {
+          "sector_name": "Other",
+          "weight_pct": 26.74
+        }
+      ],
+      "country_breakdown": [
+        {
+          "country_name": "United States",
+          "weight_pct": 70.81
+        },
+        {
+          "country_name": "Japan",
+          "weight_pct": 5.91
+        },
+        {
+          "country_name": "United Kingdom",
+          "weight_pct": 3.6
+        },
+        {
+          "country_name": "Canada",
+          "weight_pct": 3.24
+        },
+        {
+          "country_name": "Other",
+          "weight_pct": 16.44
+        }
+      ],
+      "ter_pct": 0.2,
+      "inception_date": "25 September 2009",
+      "fund_size_eur_m": 129160.0,
+      "holdings_count": 1249,
+      "replication": "Physical",
+      "distribution_policy": "Accumulating",
+      "index_name": "MSCI World",
+      "fund_currency": "USD",
+      "volatility_1y_pct": 11.25
+    }
+  },
+  "IE00BL25JP72": {
+    "cached_at": "2026-11-19T13:53:52.978644+00:00",
+    "details": {
+      "holdings": [
+        {
+          "name": "Micron Technology",
+          "isin": "US5951121038",
+          "weight_pct": 5.5,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "AMD",
+          "isin": "US0079031078",
+          "weight_pct": 4.61,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Intel Corp.",
+          "isin": "US4581401001",
+          "weight_pct": 2.99,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Alphabet, Inc. A",
+          "isin": "US02079K3059",
+          "weight_pct": 2.69,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "ASML Holding NV",
+          "isin": "NL0010273215",
+          "weight_pct": 2.6,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Johnson & Johnson",
+          "isin": "US4781601046",
+          "weight_pct": 2.48,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "ExxonMobil Holdings Corp.",
+          "isin": "US30233Q1085",
+          "weight_pct": 2.28,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Alphabet, Inc. C",
+          "isin": "US02079K1079",
+          "weight_pct": 2.13,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Lam Research",
+          "isin": "US5128073062",
+          "weight_pct": 1.93,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Applied Materials, Inc.",
+          "isin": "US0382221051",
+          "weight_pct": 1.91,
+          "just_etf_ticker": null
+        }
+      ],
+      "sector_breakdown": [
+        {
+          "sector_name": "Technology",
+          "weight_pct": 44.46
+        },
+        {
+          "sector_name": "Finance",
+          "weight_pct": 17.23
+        },
+        {
+          "sector_name": "Energy",
+          "weight_pct": 10.64
+        },
+        {
+          "sector_name": "Industrials",
+          "weight_pct": 10.24
+        },
+        {
+          "sector_name": "Other",
+          "weight_pct": 17.43
+        }
+      ],
+      "country_breakdown": [
+        {
+          "country_name": "United States",
+          "weight_pct": 58.87
+        },
+        {
+          "country_name": "Japan",
+          "weight_pct": 11.12
+        },
+        {
+          "country_name": "Canada",
+          "weight_pct": 6.97
+        },
+        {
+          "country_name": "United Kingdom",
+          "weight_pct": 3.68
+        },
+        {
+          "country_name": "Other",
+          "weight_pct": 19.36
+        }
+      ],
+      "ter_pct": 0.25,
+      "inception_date": "5 September 2014",
+      "fund_size_eur_m": 1877.0,
+      "holdings_count": 349,
+      "replication": "Physical",
+      "distribution_policy": "Accumulating",
+      "index_name": "MSCI World Momentum",
+      "fund_currency": "USD",
+      "volatility_1y_pct": 22.88
+    }
+  },
+  "IE000KCS7J59": {
+    "cached_at": "2026-11-19T13:53:53.237509+00:00",
+    "details": {
+      "holdings": [
+        {
+          "name": "Taiwan Semiconductor Manufacturing Co., Ltd.",
+          "isin": "TW0002330008",
+          "weight_pct": 15.62,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Samsung Electronics Co., Ltd.",
+          "isin": "KR7005930003",
+          "weight_pct": 7.56,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "SK hynix, Inc.",
+          "isin": "KR7000660001",
+          "weight_pct": 5.9,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Tencent Holdings Ltd.",
+          "isin": "KYG875721634",
+          "weight_pct": 2.75,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Alibaba Group Holding Ltd.",
+          "isin": "KYG017191142",
+          "weight_pct": 1.86,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "MediaTek, Inc.",
+          "isin": "TW0002454006",
+          "weight_pct": 1.82,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Delta Electronics, Inc.",
+          "isin": "TW0002308004",
+          "weight_pct": 0.94,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Samsung Electronics Co., Ltd.",
+          "isin": "KR7005931001",
+          "weight_pct": 0.94,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "China Construction Bank Corp.",
+          "isin": "CNE1000002H1",
+          "weight_pct": 0.86,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Hon Hai Precision Industry Co., Ltd.",
+          "isin": "TW0002317005",
+          "weight_pct": 0.79,
+          "just_etf_ticker": null
+        }
+      ],
+      "sector_breakdown": [
+        {
+          "sector_name": "Technology",
+          "weight_pct": 46.8
+        },
+        {
+          "sector_name": "Finance",
+          "weight_pct": 21.13
+        },
+        {
+          "sector_name": "Non-Energy Materials",
+          "weight_pct": 6.58
+        },
+        {
+          "sector_name": "Industrials",
+          "weight_pct": 5.58
+        },
+        {
+          "sector_name": "Other",
+          "weight_pct": 19.91
+        }
+      ],
+      "country_breakdown": [
+        {
+          "country_name": "Taiwan",
+          "weight_pct": 28.94
+        },
+        {
+          "country_name": "South Korea",
+          "weight_pct": 21.39
+        },
+        {
+          "country_name": "China",
+          "weight_pct": 17.83
+        },
+        {
+          "country_name": "India",
+          "weight_pct": 10.63
+        },
+        {
+          "country_name": "Other",
+          "weight_pct": 21.21
+        }
+      ],
+      "ter_pct": 0.15,
+      "inception_date": "28 June 2022",
+      "fund_size_eur_m": 1551.0,
+      "holdings_count": 1173,
+      "replication": "Physical",
+      "distribution_policy": "Accumulating",
+      "index_name": "MSCI Emerging Markets",
+      "fund_currency": "USD",
+      "volatility_1y_pct": 21.91
+    }
+  },
+  "IE000YYE6WK5": {
+    "cached_at": "2026-11-19T13:53:53.516417+00:00",
+    "details": {
+      "holdings": [
+        {
+          "name": "Palantir Technologies, Inc.",
+          "isin": "US69608A1088",
+          "weight_pct": 8.97,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "RTX",
+          "isin": "US75513E1010",
+          "weight_pct": 7.64,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "HANWHA AEROSPACE Co., Ltd.",
+          "isin": "KR7012450003",
+          "weight_pct": 7.26,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Thales SA",
+          "isin": "FR0000121329",
+          "weight_pct": 7.07,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "SAAB",
+          "isin": "SE0021921269",
+          "weight_pct": 5.78,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Leonardo SpA",
+          "isin": "IT0003856405",
+          "weight_pct": 5.72,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Elbit Systems",
+          "isin": "IL0010811243",
+          "weight_pct": 5.41,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Curtiss-Wright",
+          "isin": "US2315611010",
+          "weight_pct": 4.49,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Kongsberg Gruppen",
+          "isin": "NO0013536151",
+          "weight_pct": 4.21,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Singapore Technologies Engineering Ltd.",
+          "isin": "SG1F60858221",
+          "weight_pct": 3.82,
+          "just_etf_ticker": null
+        }
+      ],
+      "sector_breakdown": [
+        {
+          "sector_name": "Industrials",
+          "weight_pct": 81.62
+        },
+        {
+          "sector_name": "Business Services",
+          "weight_pct": 13.51
+        },
+        {
+          "sector_name": "Technology",
+          "weight_pct": 4.88
+        }
+      ],
+      "country_breakdown": [
+        {
+          "country_name": "United States",
+          "weight_pct": 46.71
+        },
+        {
+          "country_name": "South Korea",
+          "weight_pct": 11.67
+        },
+        {
+          "country_name": "France",
+          "weight_pct": 9.33
+        },
+        {
+          "country_name": "Israel",
+          "weight_pct": 6.69
+        },
+        {
+          "country_name": "Other",
+          "weight_pct": 25.6
+        }
+      ],
+      "ter_pct": 0.55,
+      "inception_date": "31 March 2023",
+      "fund_size_eur_m": 5490.0,
+      "holdings_count": 44,
+      "replication": "Physical",
+      "distribution_policy": "Accumulating",
+      "index_name": "MarketVector Global Defense Industry",
+      "fund_currency": "USD",
+      "volatility_1y_pct": 25.35
+    }
+  },
+  "IE000M7V94E1": {
+    "cached_at": "2026-11-19T13:53:53.769267+00:00",
+    "details": {
+      "holdings": [
+        {
+          "name": "Cameco",
+          "isin": "CA13321L1085",
+          "weight_pct": 14.68,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Sprott Physical Uranium",
+          "isin": "CA85210A1049",
+          "weight_pct": 7.13,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "NexGen Energy Ltd.",
+          "isin": "CA65340P1062",
+          "weight_pct": 7.02,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Oklo",
+          "isin": "US02156V1098",
+          "weight_pct": 6.03,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Fuji Electric Co., Ltd.",
+          "isin": "JP3820000002",
+          "weight_pct": 5.89,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Hitachi Ltd.",
+          "isin": "JP3788600009",
+          "weight_pct": 5.87,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Atkinsrealis Group",
+          "isin": "CA04764T1049",
+          "weight_pct": 5.58,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Mitsubishi Heavy Industries, Ltd.",
+          "isin": "JP3900000005",
+          "weight_pct": 5.57,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "IHI Corp.",
+          "isin": "JP3134800006",
+          "weight_pct": 5.31,
+          "just_etf_ticker": null
+        },
+        {
+          "name": "Samsung C&T Corp.",
+          "isin": "KR7028260008",
+          "weight_pct": 5.08,
+          "just_etf_ticker": null
+        }
+      ],
+      "sector_breakdown": [
+        {
+          "sector_name": "Industrials",
+          "weight_pct": 49.78
+        },
+        {
+          "sector_name": "Energy",
+          "weight_pct": 34.79
+        },
+        {
+          "sector_name": "Non-Corporate",
+          "weight_pct": 7.13
+        },
+        {
+          "sector_name": "Utilities",
+          "weight_pct": 6.03
+        },
+        {
+          "sector_name": "Non-Energy Materials",
+          "weight_pct": 2.28
+        },
+        {
+          "sector_name": "Other",
+          "weight_pct": 0.0
+        }
+      ],
+      "country_breakdown": [
+        {
+          "country_name": "Canada",
+          "weight_pct": 37.07
+        },
+        {
+          "country_name": "Japan",
+          "weight_pct": 26.24
+        },
+        {
+          "country_name": "United States",
+          "weight_pct": 21.86
+        },
+        {
+          "country_name": "South Korea",
+          "weight_pct": 6.85
+        },
+        {
+          "country_name": "Other",
+          "weight_pct": 7.98
+        }
+      ],
+      "ter_pct": 0.55,
+      "inception_date": "3 February 2023",
+      "fund_size_eur_m": 1450.0,
+      "holdings_count": 25,
+      "replication": "Physical",
+      "distribution_policy": "Accumulating",
+      "index_name": "MarketVector Global Uranium and Nuclear Energy Infrastructure",
+      "fund_currency": "USD",
+      "volatility_1y_pct": 35.57
+    }
+  }
+}

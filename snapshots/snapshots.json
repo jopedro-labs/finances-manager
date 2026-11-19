@@ -13,7 +13,7 @@
       "stocks_eur": 1240.79,
       "etfs_eur": 1901.87
     },
-    "holdings": [
+    "asset": [
       {
         "ticker": "AMZN.US",
         "isin": "US0231351067",
@@ -27,7 +27,7 @@
         "unrealized_pnl_pct": -8.94,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 6.81,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AMZN"
       },
       {
@@ -43,7 +43,7 @@
         "unrealized_pnl_pct": -1.16,
         "target_allocation_pct": 28.0,
         "current_allocation_pct": 28.84,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "EUNL.DE"
       },
       {
@@ -59,7 +59,7 @@
         "unrealized_pnl_pct": 2.68,
         "target_allocation_pct": 6.0,
         "current_allocation_pct": 6.64,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "DFEN.DE"
       },
       {
@@ -75,7 +75,7 @@
         "unrealized_pnl_pct": -0.34,
         "target_allocation_pct": 2.0,
         "current_allocation_pct": 9.56,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "JPM"
       },
       {
@@ -91,7 +91,7 @@
         "unrealized_pnl_pct": -5.32,
         "target_allocation_pct": 10.0,
         "current_allocation_pct": 8.75,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "H4Z3.DE"
       },
       {
@@ -107,7 +107,7 @@
         "unrealized_pnl_pct": -4.69,
         "target_allocation_pct": 11.0,
         "current_allocation_pct": 10.31,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "XDEM.DE"
       },
       {
@@ -123,7 +123,7 @@
         "unrealized_pnl_pct": -7.7,
         "target_allocation_pct": 4.5,
         "current_allocation_pct": 11.62,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "NVDA"
       },
       {
@@ -139,7 +139,7 @@
         "unrealized_pnl_pct": -6.95,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 11.49,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "TSM"
       },
       {
@@ -155,7 +155,7 @@
         "unrealized_pnl_pct": -4.82,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 5.98,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "NUKL.DE"
       },
       {
@@ -169,7 +169,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AAPL"
       },
       {
@@ -183,7 +183,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 4.5,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "MSFT"
       },
       {
@@ -197,7 +197,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "GOOGL"
       },
       {
@@ -211,7 +211,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "LLY"
       },
       {
@@ -225,7 +225,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "DKK",
+        "native_currency": "DKK",
         "yahoo_ticker": "NOVO-B.CO"
       },
       {
@@ -239,7 +239,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "BRK-B"
       },
       {
@@ -253,7 +253,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 2.0,
         "current_allocation_pct": 0.0,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "MC.PA"
       }
     ]
@@ -272,7 +272,7 @@
       "stocks_eur": 1240.79,
       "etfs_eur": 1901.87
     },
-    "holdings": [
+    "asset": [
       {
         "ticker": "AMZN.US",
         "isin": "US0231351067",
@@ -286,7 +286,7 @@
         "unrealized_pnl_pct": -8.94,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 6.81,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AMZN"
       },
       {
@@ -302,7 +302,7 @@
         "unrealized_pnl_pct": -1.16,
         "target_allocation_pct": 28.0,
         "current_allocation_pct": 28.84,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "EUNL.DE"
       },
       {
@@ -318,7 +318,7 @@
         "unrealized_pnl_pct": 2.68,
         "target_allocation_pct": 6.0,
         "current_allocation_pct": 6.64,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "DFEN.DE"
       },
       {
@@ -334,7 +334,7 @@
         "unrealized_pnl_pct": -0.34,
         "target_allocation_pct": 2.0,
         "current_allocation_pct": 9.56,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "JPM"
       },
       {
@@ -350,7 +350,7 @@
         "unrealized_pnl_pct": -5.32,
         "target_allocation_pct": 10.0,
         "current_allocation_pct": 8.75,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "H4Z3.DE"
       },
       {
@@ -366,7 +366,7 @@
         "unrealized_pnl_pct": -4.69,
         "target_allocation_pct": 11.0,
         "current_allocation_pct": 10.31,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "XDEM.DE"
       },
       {
@@ -382,7 +382,7 @@
         "unrealized_pnl_pct": -7.7,
         "target_allocation_pct": 4.5,
         "current_allocation_pct": 11.62,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "NVDA"
       },
       {
@@ -398,7 +398,7 @@
         "unrealized_pnl_pct": -6.95,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 11.49,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "TSM"
       },
       {
@@ -414,7 +414,7 @@
         "unrealized_pnl_pct": -4.82,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 5.98,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "NUKL.DE"
       },
       {
@@ -428,7 +428,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AAPL"
       },
       {
@@ -442,7 +442,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 4.5,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "MSFT"
       },
       {
@@ -456,7 +456,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "GOOGL"
       },
       {
@@ -470,7 +470,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "LLY"
       },
       {
@@ -484,7 +484,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "DKK",
+        "native_currency": "DKK",
         "yahoo_ticker": "NOVO-B.CO"
       },
       {
@@ -498,7 +498,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "BRK-B"
       },
       {
@@ -512,7 +512,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 2.0,
         "current_allocation_pct": 0.0,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "MC.PA"
       }
     ]
@@ -531,7 +531,7 @@
       "stocks_eur": 1240.79,
       "etfs_eur": 1901.87
     },
-    "holdings": [
+    "asset": [
       {
         "ticker": "AMZN.US",
         "isin": "US0231351067",
@@ -545,7 +545,7 @@
         "unrealized_pnl_pct": -8.94,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 6.81,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AMZN"
       },
       {
@@ -561,7 +561,7 @@
         "unrealized_pnl_pct": -1.16,
         "target_allocation_pct": 28.0,
         "current_allocation_pct": 28.84,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "EUNL.DE"
       },
       {
@@ -577,7 +577,7 @@
         "unrealized_pnl_pct": 2.68,
         "target_allocation_pct": 6.0,
         "current_allocation_pct": 6.64,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "DFEN.DE"
       },
       {
@@ -593,7 +593,7 @@
         "unrealized_pnl_pct": -0.34,
         "target_allocation_pct": 2.0,
         "current_allocation_pct": 9.56,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "JPM"
       },
       {
@@ -609,7 +609,7 @@
         "unrealized_pnl_pct": -5.32,
         "target_allocation_pct": 10.0,
         "current_allocation_pct": 8.75,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "H4Z3.DE"
       },
       {
@@ -625,7 +625,7 @@
         "unrealized_pnl_pct": -4.69,
         "target_allocation_pct": 11.0,
         "current_allocation_pct": 10.31,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "XDEM.DE"
       },
       {
@@ -641,7 +641,7 @@
         "unrealized_pnl_pct": -7.7,
         "target_allocation_pct": 4.5,
         "current_allocation_pct": 11.62,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "NVDA"
       },
       {
@@ -657,7 +657,7 @@
         "unrealized_pnl_pct": -6.95,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 11.49,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "TSM"
       },
       {
@@ -673,7 +673,7 @@
         "unrealized_pnl_pct": -4.82,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 5.98,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "NUKL.DE"
       },
       {
@@ -687,7 +687,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 5.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AAPL"
       },
       {
@@ -701,7 +701,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 4.5,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "MSFT"
       },
       {
@@ -715,7 +715,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "GOOGL"
       },
       {
@@ -729,7 +729,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "LLY"
       },
       {
@@ -743,7 +743,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "DKK",
+        "native_currency": "DKK",
         "yahoo_ticker": "NOVO-B.CO"
       },
       {
@@ -757,7 +757,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 3.0,
         "current_allocation_pct": 0.0,
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "BRK-B"
       },
       {
@@ -771,7 +771,7 @@
         "unrealized_pnl_pct": 0.0,
         "target_allocation_pct": 2.0,
         "current_allocation_pct": 0.0,
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "MC.PA"
       }
     ]
@@ -790,12 +790,12 @@
       "stocks_eur": 1197.6,
       "etfs_eur": 1825.27
     },
-    "holdings": [
+    "asset": [
       {
         "ticker": "AMZN.US",
         "isin": "US0231351067",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AMZN",
         "quantity": 1.0,
         "average_buy_price_usd": 262.74,
@@ -811,7 +811,7 @@
         "ticker": "EUNL.DE",
         "isin": "IE00B4L5Y983",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "EUNL.DE",
         "quantity": 7.0,
         "average_buy_price_eur": 130.995,
@@ -827,7 +827,7 @@
         "ticker": "DFEN.DE",
         "isin": "IE000YYE6WK5",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "DFEN.DE",
         "quantity": 4.0,
         "average_buy_price_eur": 50.81,
@@ -843,7 +843,7 @@
         "ticker": "JPM.US",
         "isin": "US46625H1005",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "JPM",
         "quantity": 1.0,
         "average_buy_price_usd": 336.87,
@@ -859,7 +859,7 @@
         "ticker": "H410.DE",
         "isin": "IE000KCS7J59",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "H4Z3.DE",
         "quantity": 20.0,
         "average_buy_price_eur": 14.5195,
@@ -875,7 +875,7 @@
         "ticker": "XDEM.DE",
         "isin": "IE00BL25JP72",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "XDEM.DE",
         "quantity": 4.0,
         "average_buy_price_eur": 84.99,
@@ -891,7 +891,7 @@
         "ticker": "NVDA.US",
         "isin": "US67066G1040",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "NVDA",
         "quantity": 2.0,
         "average_buy_price_usd": 221.0,
@@ -907,7 +907,7 @@
         "ticker": "TSM.US",
         "isin": "US8740391003",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "TSM",
         "quantity": 1.0,
         "average_buy_price_usd": 433.64,
@@ -923,7 +923,7 @@
         "ticker": "NUKL.DE",
         "isin": "IE000M7V94E1",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "NUKL.DE",
         "quantity": 5.0,
         "average_buy_price_eur": 39.49,
@@ -939,7 +939,7 @@
         "ticker": "AAPL.US",
         "isin": "US0378331005",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AAPL",
         "quantity": 0,
         "average_buy_price_usd": 0.0,
@@ -955,7 +955,7 @@
         "ticker": "MSFT.US",
         "isin": "US5949181045",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "MSFT",
         "quantity": 0,
         "average_buy_price_usd": 0.0,
@@ -971,7 +971,7 @@
         "ticker": "GOOGL.US",
         "isin": "US02079K3059",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "GOOGL",
         "quantity": 0,
         "average_buy_price_usd": 0.0,
@@ -987,7 +987,7 @@
         "ticker": "LLY.US",
         "isin": "US5324571083",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "LLY",
         "quantity": 0,
         "average_buy_price_usd": 0.0,
@@ -1003,7 +1003,7 @@
         "ticker": "NOVOB.DK",
         "isin": "DK0062498333",
         "asset_type": "STOCK",
-        "currency": "DKK",
+        "native_currency": "DKK",
         "yahoo_ticker": "NOVO-B.CO",
         "quantity": 0,
         "average_buy_price_dkk": 0.0,
@@ -1019,7 +1019,7 @@
         "ticker": "BRKB.US",
         "isin": "US0846707026",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "BRK-B",
         "quantity": 0,
         "average_buy_price_usd": 0.0,
@@ -1035,7 +1035,7 @@
         "ticker": "MC.FR",
         "isin": "FR0010208488",
         "asset_type": "STOCK",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "MC.PA",
         "quantity": 0,
         "average_buy_price_eur": 0.0,
@@ -1063,12 +1063,12 @@
       "stocks_eur": 1200.69,
       "etfs_eur": 1883.03
     },
-    "holdings": [
+    "asset": [
       {
         "ticker": "AMZN.US",
         "isin": "US0231351067",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AMZN",
         "quantity": 1.0,
         "average_buy_price_usd": 262.74,
@@ -1084,7 +1084,7 @@
         "ticker": "EUNL.DE",
         "isin": "IE00B4L5Y983",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "EUNL.DE",
         "quantity": 7.0,
         "average_buy_price_eur": 130.995,
@@ -1100,7 +1100,7 @@
         "ticker": "DFEN.DE",
         "isin": "IE000YYE6WK5",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "DFEN.DE",
         "quantity": 4.0,
         "average_buy_price_eur": 50.81,
@@ -1116,7 +1116,7 @@
         "ticker": "JPM.US",
         "isin": "US46625H1005",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "JPM",
         "quantity": 1.0,
         "average_buy_price_usd": 336.87,
@@ -1132,7 +1132,7 @@
         "ticker": "H410.DE",
         "isin": "IE000KCS7J59",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "H4Z3.DE",
         "quantity": 20.0,
         "average_buy_price_eur": 14.5195,
@@ -1148,7 +1148,7 @@
         "ticker": "XDEM.DE",
         "isin": "IE00BL25JP72",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "XDEM.DE",
         "quantity": 4.0,
         "average_buy_price_eur": 84.99,
@@ -1164,7 +1164,7 @@
         "ticker": "NVDA.US",
         "isin": "US67066G1040",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "NVDA",
         "quantity": 2.0,
         "average_buy_price_usd": 221.0,
@@ -1180,7 +1180,7 @@
         "ticker": "TSM.US",
         "isin": "US8740391003",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "TSM",
         "quantity": 1.0,
         "average_buy_price_usd": 433.64,
@@ -1196,7 +1196,7 @@
         "ticker": "NUKL.DE",
         "isin": "IE000M7V94E1",
         "asset_type": "ETF",
-        "currency": "EUR",
+        "native_currency": "EUR",
         "yahoo_ticker": "NUKL.DE",
         "quantity": 5.0,
         "average_buy_price_eur": 39.49,
@@ -1212,7 +1212,7 @@
         "ticker": "AAPL.US",
         "isin": "US0378331005",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "AAPL",
         "quantity": 0,
         "unrealized_pnl_pct": 0.0,
@@ -1228,7 +1228,7 @@
         "ticker": "MSFT.US",
         "isin": "US5949181045",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "MSFT",
         "quantity": 0,
         "unrealized_pnl_pct": 0.0,
@@ -1244,7 +1244,7 @@
         "ticker": "GOOGL.US",
         "isin": "US02079K3059",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "GOOGL",
         "quantity": 0,
         "unrealized_pnl_pct": 0.0,
@@ -1260,7 +1260,7 @@
         "ticker": "LLY.US",
         "isin": "US5324571083",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "LLY",
         "quantity": 0,
         "unrealized_pnl_pct": 0.0,
@@ -1276,7 +1276,7 @@
         "ticker": "NOVOB.DK",
         "isin": "DK0062498333",
         "asset_type": "STOCK",
-        "currency": "DKK",
+        "native_currency": "DKK",
         "yahoo_ticker": "NOVO-B.CO",
         "quantity": 0,
         "unrealized_pnl_pct": 0.0,
@@ -1292,7 +1292,7 @@
         "ticker": "BRKB.US",
         "isin": "US0846707026",
         "asset_type": "STOCK",
-        "currency": "USD",
+        "native_currency": "USD",
         "yahoo_ticker": "BRK-B",
         "quantity": 0,
         "unrealized_pnl_pct": 0.0,
@@ -1308,7 +1308,280 @@
         "ticker": "MC.FR",
         "isin": "FR0010208488",
         "asset_type": "STOCK",
-        "currency": "EUR",
+        "native_currency": "EUR",
+        "yahoo_ticker": "MC.PA",
+        "quantity": 0,
+        "average_buy_price_eur": 0.0,
+        "market_price_eur": 0.0,
+        "total_cost_eur": 0.0,
+        "market_value_eur": 0.0,
+        "unrealized_pnl_eur": 0.0,
+        "unrealized_pnl_pct": 0.0,
+        "target_allocation_pct": 2.0,
+        "current_allocation_pct": 0.0
+      }
+    ]
+  },
+  {
+    "date": "2026-11-11",
+    "timestamp": "2026-11-11T08:02:03Z",
+    "total_invested_eur": 3268.26,
+    "total_market_value_eur": 3090.42,
+    "unrealized_pnl_eur": -177.84,
+    "unrealized_pnl_pct": -5.44,
+    "currencies_rate": {
+      "EURUSD": null
+    },
+    "breakdown": {
+      "stocks_eur": 1201.56,
+      "etfs_eur": 1888.86
+    },
+    "asset": [
+      {
+        "ticker": "AMZN.US",
+        "isin": "US0231351067",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "AMZN",
+        "quantity": 1.0,
+        "average_buy_price_usd": 262.74,
+        "market_price_usd": 270.89,
+        "total_cost_eur": 235.13,
+        "market_value_eur": 241.57,
+        "unrealized_pnl_eur": 6.44,
+        "unrealized_pnl_pct": 2.74,
+        "target_allocation_pct": 5.0,
+        "current_allocation_pct": 7.82
+      },
+      {
+        "ticker": "EUNL.DE",
+        "isin": "IE00B4L5Y983",
+        "asset_type": "ETF",
+        "native_currency": "EUR",
+        "yahoo_ticker": "EUNL.DE",
+        "quantity": 7.0,
+        "average_buy_price_eur": 130.995,
+        "market_price_eur": 129.815,
+        "total_cost_eur": 916.97,
+        "market_value_eur": 908.71,
+        "unrealized_pnl_eur": -8.26,
+        "unrealized_pnl_pct": -0.9,
+        "target_allocation_pct": 28.0,
+        "current_allocation_pct": 29.4
+      },
+      {
+        "ticker": "DFEN.DE",
+        "isin": "IE000YYE6WK5",
+        "asset_type": "ETF",
+        "native_currency": "EUR",
+        "yahoo_ticker": "DFEN.DE",
+        "quantity": 4.0,
+        "average_buy_price_eur": 50.81,
+        "market_price_eur": 51.4,
+        "total_cost_eur": 203.24,
+        "market_value_eur": 205.6,
+        "unrealized_pnl_eur": 2.36,
+        "unrealized_pnl_pct": 1.16,
+        "target_allocation_pct": 6.0,
+        "current_allocation_pct": 6.65
+      },
+      {
+        "ticker": "JPM.US",
+        "isin": "US46625H1005",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "JPM",
+        "quantity": 1.0,
+        "average_buy_price_usd": 336.87,
+        "market_price_usd": 341.98,
+        "total_cost_eur": 301.48,
+        "market_value_eur": 304.97,
+        "unrealized_pnl_eur": 3.49,
+        "unrealized_pnl_pct": 1.16,
+        "target_allocation_pct": 2.0,
+        "current_allocation_pct": 9.87
+      },
+      {
+        "ticker": "H410.DE",
+        "isin": "IE000KCS7J59",
+        "asset_type": "ETF",
+        "native_currency": "EUR",
+        "yahoo_ticker": "H4Z3.DE",
+        "quantity": 20.0,
+        "average_buy_price_eur": 14.5195,
+        "market_price_eur": 13.7185,
+        "total_cost_eur": 290.39,
+        "market_value_eur": 274.37,
+        "unrealized_pnl_eur": -16.02,
+        "unrealized_pnl_pct": -5.52,
+        "target_allocation_pct": 10.0,
+        "current_allocation_pct": 8.88
+      },
+      {
+        "ticker": "XDEM.DE",
+        "isin": "IE00BL25JP72",
+        "asset_type": "ETF",
+        "native_currency": "EUR",
+        "yahoo_ticker": "XDEM.DE",
+        "quantity": 4.0,
+        "average_buy_price_eur": 84.99,
+        "market_price_eur": 78.77,
+        "total_cost_eur": 339.96,
+        "market_value_eur": 315.08,
+        "unrealized_pnl_eur": -24.88,
+        "unrealized_pnl_pct": -7.32,
+        "target_allocation_pct": 11.0,
+        "current_allocation_pct": 10.2
+      },
+      {
+        "ticker": "NVDA.US",
+        "isin": "US67066G1040",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "NVDA",
+        "quantity": 2.0,
+        "average_buy_price_usd": 221.0,
+        "market_price_usd": 168.97,
+        "total_cost_eur": 395.56,
+        "market_value_eur": 301.37,
+        "unrealized_pnl_eur": -94.19,
+        "unrealized_pnl_pct": -23.81,
+        "target_allocation_pct": 4.5,
+        "current_allocation_pct": 9.75
+      },
+      {
+        "ticker": "TSM.US",
+        "isin": "US8740391003",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "TSM",
+        "quantity": 1.0,
+        "average_buy_price_usd": 433.64,
+        "market_price_usd": 396.57,
+        "total_cost_eur": 388.08,
+        "market_value_eur": 353.65,
+        "unrealized_pnl_eur": -34.43,
+        "unrealized_pnl_pct": -8.87,
+        "target_allocation_pct": 3.0,
+        "current_allocation_pct": 11.44
+      },
+      {
+        "ticker": "NUKL.DE",
+        "isin": "IE000M7V94E1",
+        "asset_type": "ETF",
+        "native_currency": "EUR",
+        "yahoo_ticker": "NUKL.DE",
+        "quantity": 5.0,
+        "average_buy_price_eur": 39.49,
+        "market_price_eur": 37.02,
+        "total_cost_eur": 197.45,
+        "market_value_eur": 185.1,
+        "unrealized_pnl_eur": -12.35,
+        "unrealized_pnl_pct": -6.25,
+        "target_allocation_pct": 5.0,
+        "current_allocation_pct": 5.99
+      },
+      {
+        "ticker": "AAPL.US",
+        "isin": "US0378331005",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "AAPL",
+        "quantity": 0,
+        "average_buy_price_usd": 0.0,
+        "market_price_usd": 0.0,
+        "total_cost_eur": 0.0,
+        "market_value_eur": 0.0,
+        "unrealized_pnl_eur": 0.0,
+        "unrealized_pnl_pct": 0.0,
+        "target_allocation_pct": 5.0,
+        "current_allocation_pct": 0.0
+      },
+      {
+        "ticker": "MSFT.US",
+        "isin": "US5949181045",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "MSFT",
+        "quantity": 0,
+        "average_buy_price_usd": 0.0,
+        "market_price_usd": 0.0,
+        "total_cost_eur": 0.0,
+        "market_value_eur": 0.0,
+        "unrealized_pnl_eur": 0.0,
+        "unrealized_pnl_pct": 0.0,
+        "target_allocation_pct": 4.5,
+        "current_allocation_pct": 0.0
+      },
+      {
+        "ticker": "GOOGL.US",
+        "isin": "US02079K3059",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "GOOGL",
+        "quantity": 0,
+        "average_buy_price_usd": 0.0,
+        "market_price_usd": 0.0,
+        "total_cost_eur": 0.0,
+        "market_value_eur": 0.0,
+        "unrealized_pnl_eur": 0.0,
+        "unrealized_pnl_pct": 0.0,
+        "target_allocation_pct": 5.0,
+        "current_allocation_pct": 0.0
+      },
+      {
+        "ticker": "LLY.US",
+        "isin": "US5324571083",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "LLY",
+        "quantity": 0,
+        "average_buy_price_usd": 0.0,
+        "market_price_usd": 0.0,
+        "total_cost_eur": 0.0,
+        "market_value_eur": 0.0,
+        "unrealized_pnl_eur": 0.0,
+        "unrealized_pnl_pct": 0.0,
+        "target_allocation_pct": 3.0,
+        "current_allocation_pct": 0.0
+      },
+      {
+        "ticker": "NOVOB.DK",
+        "isin": "DK0062498333",
+        "asset_type": "STOCK",
+        "native_currency": "DKK",
+        "yahoo_ticker": "NOVO-B.CO",
+        "quantity": 0,
+        "average_buy_price_dkk": 0.0,
+        "market_price_dkk": 0.0,
+        "total_cost_eur": 0.0,
+        "market_value_eur": 0.0,
+        "unrealized_pnl_eur": 0.0,
+        "unrealized_pnl_pct": 0.0,
+        "target_allocation_pct": 3.0,
+        "current_allocation_pct": 0.0
+      },
+      {
+        "ticker": "BRKB.US",
+        "isin": "US0846707026",
+        "asset_type": "STOCK",
+        "native_currency": "USD",
+        "yahoo_ticker": "BRK-B",
+        "quantity": 0,
+        "average_buy_price_usd": 0.0,
+        "market_price_usd": 0.0,
+        "total_cost_eur": 0.0,
+        "market_value_eur": 0.0,
+        "unrealized_pnl_eur": 0.0,
+        "unrealized_pnl_pct": 0.0,
+        "target_allocation_pct": 3.0,
+        "current_allocation_pct": 0.0
+      },
+      {
+        "ticker": "MC.FR",
+        "isin": "FR0010208488",
+        "asset_type": "STOCK",
+        "native_currency": "EUR",
         "yahoo_ticker": "MC.PA",
         "quantity": 0,
         "average_buy_price_eur": 0.0,

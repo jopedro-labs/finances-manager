@@ -127,7 +127,7 @@ where `r` = scenario CAGR, `t` = number of years.
 ```
 r_monthly = (1 + r)^(1/12) - 1
 n = t × 12
-FV_pmt = PMT × [((1 + r_monthly)^n - 1) / r_monthly] × (1 + r_monthly)
+FV_pmt = PMT × [((1 + r_monthly)^n - 1) / r_monthly]
 ```
 
 **3. Total nominal portfolio value:**
@@ -230,3 +230,40 @@ For **any** modification, edit or deletion of files on Google Drive (`../snapsho
 - **Active Challenge & Counter-Bias:** Always challenge thesis assumptions. If the user or context leans towards a biased decision (e.g., holding a decaying asset out of loss aversion or chasing a rallying stock), explicitly highlight the counter-argument, structural risks, and violation of allocation targets.
 - **Zero Complacency:** Do not validate ideas simply because they sound promising. Require empirical proof (valuations, balance sheet strength, historical metrics) before endorsing a thesis.
 - **Direct & Unfiltered Feedback:** Present raw, unvarnished facts and risk metrics. Recommendations must strictly follow the decision matrix regardless of recent price action.
+
+---
+
+## 8. Investment Strategy
+
+### Objective
+
+Long-term wealth accumulation over a **20+ year horizon** through consistent compounding. Priority is systematic accumulation — not market timing.
+
+### Core Principles
+
+- **Consistency over timing:** Regular monthly contributions (€300/month) regardless of market conditions. Missing contributions is more damaging than buying at a suboptimal price.
+- **Diversification by design:** Core exposure via broad global ETFs (MSCI World, Emerging Markets); satellite positions in high-conviction individual stocks.
+- **Quality discipline:** Individual stocks must meet Tier A or Tier B criteria. Tier C positions are held only pending an exit opportunity — never added to.
+- **Rebalancing over speculation:** Allocation gaps drive buy decisions, not short-term price action. The scoring engine enforces this mechanically.
+
+### Portfolio Structure
+
+| Layer | Target Weight | Purpose |
+|---|---|---|
+| **Core ETFs** (MSCI World, Momentum, EM) | ~49% | Broad market exposure, low cost, compounding engine |
+| **Thematic ETFs** (Defense, Uranium) | ~11% | Structural macro themes with defined risk budget |
+| **Individual Stocks** | ~40% | Alpha generation through quality stock selection |
+
+### Risk Constraints
+
+- No single country > 60% of portfolio (look-through)
+- No single sector > 50% (Technology) or > 20% (other sectors)
+- No single company > 15% consolidated exposure
+- Violations apply penalty multipliers to the asset's quantitative score (Section 1)
+
+### Exit Criteria
+
+A position is a **SELL** candidate when it meets any of the following:
+- Tier C classification with no credible recovery thesis within 12 months
+- Allocation significantly exceeds target and fundamentals have deteriorated
+- A higher-conviction opportunity exists and capital reallocation improves overall portfolio quality
