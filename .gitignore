@@ -1,16 +1,37 @@
-.env
-secrets/
-data/.temp_snapshot.json
-input/
+# Python
 __pycache__/
 *.pyc
 *.pyo
-.pytest_cache/
+*.pyd
+*.Python
 *.egg-info/
 dist/
 build/
-.DS_Store
 .venv/
+env/
+venv/
+.env
+
+# Testing & Analysis
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# IDEs & OS
 .idea/
-index.html
+.vscode/
+.DS_Store
+
+# Project Specific
+input/
+secrets/
 reports/
+
+# Data & Databases
+data/*.db
+data/*.json
+# If you need to keep specific json files, you can uncomment them:
+# !data/config.json
+
