@@ -4,8 +4,8 @@
 ### 1. Dynamic Module Exports Missing `__all__`
 - **Context:** `core_lib/discord/__init__.py` and `core_lib/gdrive/__init__.py` use `__getattr__` for lazy loading, but lack `__all__` or `.pyi` stubs.
 - **Action Items:**
-  - [ ] Implement `__all__` or type stubs to improve static analysis and IDE symbol resolution.
-  - [ ] Add `tests/test_package_exports.py` to verify lazy-loading and attribute resolution.
+  - [x] Implement `__all__` or type stubs to improve static analysis and IDE symbol resolution.
+  - [x] Add `tests/test_package_exports.py` to verify lazy-loading and attribute resolution.
 
 ### 2. GDrive Service Defensive Guardrails
 - **Context:** 21 statements in `GDriveService` are unexercised (credential handling, API exceptions, folder access).
@@ -41,3 +41,4 @@
 ## Future Enhancements
 - [ ] Implement typed wrappers for Google API client resources.
 - [ ] Migrate from `unittest.mock` to loopback integration fixtures where possible.
+
