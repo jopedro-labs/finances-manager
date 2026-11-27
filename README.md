@@ -88,7 +88,7 @@ data/finances.db
 ### 1. Install dependencies
 
 ```bash
-pip install -e .
+pip install -e ".[dev]"
 ```
 
 ### 2. Configure environment
@@ -236,17 +236,19 @@ Violations apply score penalty multipliers to affected assets.
 ## Code Quality
 
 ```bash
+make test      # run automated pytest test suite
 make lint      # ruff (lint + format) + mypy (strict type check)
 make security  # bandit static security scan
 ```
 
 | Tool   | Purpose                        | Config            |
 |--------|--------------------------------|-------------------|
+| pytest | Automated unit testing & regression suite | `pyproject.toml`  |
 | ruff   | Linting, import sorting, style | `pyproject.toml`  |
 | mypy   | Static type checking (strict)  | `pyproject.toml`  |
 | bandit | Security vulnerability scan    | CLI flags         |
 
-A GitHub Actions workflow (`.github/workflows/lint.yml`) runs `make lint` on every push and pull request.
+A GitHub Actions workflow (`.github/workflows/lint.yml`) runs linting, type checks, and the pytest test suite on every push and pull request.
 
 ---
 
@@ -255,4 +257,6 @@ A GitHub Actions workflow (`.github/workflows/lint.yml`) runs `make lint` on eve
 - Python 3.13+
 - `google-genai` — Gemini API client
 - `google-api-python-client` + `google-auth-oauthlib` — Google Drive
-- `pydantic-settings` — configuration management
+- `pydantic` & `pydantic-settings` — schema validation and configuration management
+- `python-dotenv` — environment variable loading
+- `pandas` & `yfinance` — portfolio analytics and market quote fetching

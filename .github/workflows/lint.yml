@@ -27,3 +27,6 @@ jobs:
 
       - name: Mypy — type check
         run: mypy .
+
+      - name: Pytest — run test suite
+        run: pytest

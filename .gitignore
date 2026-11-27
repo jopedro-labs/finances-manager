@@ -10,7 +10,8 @@ build/
 .venv/
 env/
 venv/
-.env
+.env*
+!.env.example
 
 # Testing & Analysis
 .pytest_cache/
@@ -28,10 +29,13 @@ htmlcov/
 input/
 secrets/
 reports/
+logs/
+*.log
 
 # Data & Databases
 data/*.db
+data/*.db-shm
+data/*.db-wal
+data/*.sqlite*
+data/.temp_snapshot.json
 data/*.json
-# If you need to keep specific json files, you can uncomment them:
-# !data/config.json
-

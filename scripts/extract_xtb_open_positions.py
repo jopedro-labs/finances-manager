@@ -151,7 +151,7 @@ def main() -> None:
     try:
         target_image = get_screenshot_path()
         result = extract_data_from_screenshot(target_image)
-        print(result)
+        print(json.dumps(result, indent=2))
     except Exception as exc:
         logger.error(f"[extract with gemini] Execution failed: {exc}")
         sys.exit(1)

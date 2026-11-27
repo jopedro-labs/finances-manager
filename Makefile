@@ -1,8 +1,9 @@
-.PHONY: help migrate snapshot analysis analysis-refresh dashboard projections quality quality-refresh gdrive-push gdrive-pull report report-html report-md clean lint security
+.PHONY: help migrate snapshot analysis analysis-refresh dashboard projections quality quality-refresh gdrive-push gdrive-pull report report-html report-md clean lint test security
 
 PYTHON := .venv/bin/python3
 RUFF   := .venv/bin/ruff
 MYPY   := .venv/bin/mypy
+PYTEST := .venv/bin/pytest
 BANDIT := .venv/bin/bandit
 export PYTHONPATH := $(CURDIR)
 
@@ -23,6 +24,7 @@ help:
 	@echo "  make migrate          - Reconcile portfolio seed JSON into SQLite database"
 	@echo "  make clean            - Remove generated files (reports/, temp snapshot)"
 	@echo "  make lint             - Run ruff (lint + format check) and mypy (type check)"
+	@echo "  make test             - Run pytest test suite"
 	@echo "  make security         - Run bandit security scan"
 
 snapshot:
@@ -79,6 +81,7 @@ gdrive-push:
 gdrive-pull:
 	@echo "Pulling latest database and JSON configs from Google Drive..."
 	@$(PYTHON) scripts/gdrive_db_sync.py --pull
+	@$(PYTHON) scripts/gdrive_jsons_sync.py --pull
 
 report: report-md
 
@@ -100,6 +103,10 @@ lint:
 	@$(RUFF) format --check .
 	@echo "[make lint] Running mypy..."
 	@$(MYPY) .
+
+test:
+	@echo "[make test] Running pytest test suite..."
+	@$(PYTEST) -v
 
 format:
 	@echo "Formatting code with ruff..."
