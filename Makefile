@@ -1,4 +1,4 @@
-.PHONY: help migrate snapshot analysis analysis-refresh dashboard projections quality quality-refresh gdrive-push gdrive-pull report report-html report-md clean lint test security
+.PHONY: help install check migrate snapshot analysis analysis-refresh dashboard projections quality quality-refresh gdrive-push gdrive-pull report report-html report-md clean lint test validate-audit security
 
 PYTHON := .venv/bin/python3
 RUFF   := .venv/bin/ruff
@@ -9,6 +9,8 @@ export PYTHONPATH := $(CURDIR)
 
 help:
 	@echo "Portfolio Manager -- Available commands:"
+	@echo "  make install          - Install project dependencies from pyproject.toml (including dev tools)"
+	@echo "  make check            - Run lint, test, and validate-audit"
 	@echo "  make snapshot         - Extract data from XTB screenshot in input/ and run snapshot"
 	@echo "  make analysis         - Run portfolio and asset performance analysis (cached fundamentals)"
 	@echo "  make analysis-refresh - Run portfolio analysis forcing live API fetch (bypassing cache)"
@@ -25,7 +27,20 @@ help:
 	@echo "  make clean            - Remove generated files (reports/, temp snapshot)"
 	@echo "  make lint             - Run ruff (lint + format check) and mypy (type check)"
 	@echo "  make test             - Run pytest test suite"
+	@echo "  make validate-audit   - Validate AUDIT.md integrity and structure"
 	@echo "  make security         - Run bandit security scan"
+
+install:
+	@echo "Installing project dependencies from pyproject.toml (including development tools)..."
+	@if [ -d ".venv" ] && [ -f ".venv/bin/pip" ]; then \
+		.venv/bin/pip install -e ".[dev]"; \
+	elif [ -n "$$VIRTUAL_ENV" ]; then \
+		pip install -e ".[dev]"; \
+	else \
+		python3 -m pip install -e ".[dev]"; \
+	fi
+
+check: lint test validate-audit
 
 snapshot:
 	@echo "[make snapshot] Step 1: Pulling latest database from Google Drive..."
@@ -107,6 +122,10 @@ lint:
 test:
 	@echo "[make test] Running pytest test suite..."
 	@$(PYTEST) -v
+
+validate-audit:
+	@echo "[make validate-audit] Validating AUDIT.md integrity and structure..."
+	@$(PYTHON) scripts/validate_audit_sync.py
 
 format:
 	@echo "Formatting code with ruff..."

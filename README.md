@@ -2,7 +2,7 @@
 
 ![Python 3.13+](https://img.shields.io/badge/python-3.13+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Version](https://img.shields.io/badge/version-0.1.0-58a6ff?style=flat-square)
-![Lint Workflow](https://github.com/jopedro-labs/finances-manager/actions/workflows/lint.yml/badge.svg)
+![CI Workflow](https://github.com/jopedro-labs/finances-manager/actions/workflows/ci.yml/badge.svg)
 ![SQLite](https://img.shields.io/badge/database-SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
 <br />
 ![Linter](https://img.shields.io/badge/linter-Ruff-000000?style=flat-square&logo=python&logoColor=white)
@@ -236,9 +236,11 @@ Violations apply score penalty multipliers to affected assets.
 ## Code Quality
 
 ```bash
-make test      # run automated pytest test suite
-make lint      # ruff (lint + format) + mypy (strict type check)
-make security  # bandit static security scan
+make check           # run lint, type check, pytest, and AUDIT validation
+make test            # run automated pytest test suite
+make lint            # ruff (lint + format) + mypy (strict type check)
+make validate-audit  # validate AUDIT.md integrity and sync
+make security        # bandit static security scan
 ```
 
 | Tool   | Purpose                        | Config            |
@@ -248,7 +250,7 @@ make security  # bandit static security scan
 | mypy   | Static type checking (strict)  | `pyproject.toml`  |
 | bandit | Security vulnerability scan    | CLI flags         |
 
-A GitHub Actions workflow (`.github/workflows/lint.yml`) runs linting, type checks, and the pytest test suite on every push and pull request.
+A GitHub Actions workflow (`.github/workflows/ci.yml`) runs linting, type checks, the pytest test suite, and AUDIT validation on every push and pull request.
 
 ---
 

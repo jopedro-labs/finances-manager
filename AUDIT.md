@@ -56,9 +56,9 @@ The project serves as the core orchestration, valuation, and reporting engine fo
   - However, `make gdrive-pull` only runs `scripts/gdrive_db_sync.py --pull`, omitting `scripts/gdrive_jsons_sync.py --pull`. This leaves local `data/portfolio.json` and `data/portfolio_targets.json` un-synchronized after a fresh clone.
   - Acceptance Criteria: Update `Makefile` `gdrive-pull` target to pull both database and JSON configurations.
 
-- [x] **Missing Makefile Test Target & Help Integration**:
-  - `Makefile` lacked a `test` target and `.PHONY` declaration, requiring manual invocation of `pytest`.
-  - Acceptance Criteria: Add `test` target (`$(PYTEST) -v`) and expose it in `help`.
+- [x] **Missing Makefile Targets (`install`, `check`, `validate-audit`, `test`)**:
+  - `Makefile` lacked `install`, `check`, and `validate-audit` targets, requiring manual invocation of tools.
+  - Acceptance Criteria: Add `make install` (`pip install -e ".[dev]"`), `make test`, `make validate-audit`, and `make check`.
 
 - [x] **Logging Standard Violation in `scripts/extract_xtb_open_positions.py`**:
   - Line 154 invokes `print(result)` printing an unformatted raw Python dictionary to STDOUT instead of using `core_lib.logger` or structured JSON serialization.
@@ -73,9 +73,14 @@ The project serves as the core orchestration, valuation, and reporting engine fo
   - Exception logging uses `logger.error(str(err), exception=e)`, which causes keyword mismatch in standard loggers.
   - Acceptance Criteria: Add `pd.isna` verification and use standard logging syntax.
 
-- [x] **CI Workflow Quality Gate Omission in `.github/workflows/lint.yml`**:
-  - The GitHub Actions workflow `lint.yml` runs `ruff check`, `ruff format --check`, and `mypy`, but never runs `pytest`.
-  - Acceptance Criteria: Add a test execution step (`pytest`) to CI workflow.
+- [x] **CI Workflow Modernization to `ci.yml` (`core-lib` alignment)**:
+  - Replaced legacy `.github/workflows/lint.yml` with `.github/workflows/ci.yml` matching `core-lib`.
+  - Modernized runner installation to `python -m pip install --upgrade pip && pip install -e ".[dev]"`, resolving `ModuleNotFoundError: No module named 'core_lib'` on GitHub Actions runners.
+  - Executes `ruff check .`, `ruff format --check .`, `mypy .`, `pytest --tb=short`, and `python scripts/validate_audit_sync.py --enforce-sync`.
+
+- [x] **Missing AUDIT Integrity & Sync Script (`scripts/validate_audit_sync.py`)**:
+  - Introduced `scripts/validate_audit_sync.py` and accompanying test suite `tests/test_validate_audit_sync.py` to enforce required section headers and sync coherence across monitored paths.
+  - Acceptance Criteria: Implement and test audit verification tool.
 
 - [x] **Missing Direct Dependencies & Dev Dependencies in `pyproject.toml`**:
   - Direct imports of `python-dotenv` and `pydantic` were not explicitly listed in `[project.dependencies]`.
@@ -95,11 +100,12 @@ The project serves as the core orchestration, valuation, and reporting engine fo
   - `tests/test_gdrive_service_extended.py`: Missing type annotations on fixtures and test parameters (`service: GDriveService`, `tmp_path: Path`), unused imports (`pathlib.Path`), and docstrings written in Portuguese violating English repository standards.
   - Acceptance Criteria: Fix all type annotations and linting in existing tests.
 
-- [x] **Core Configuration, Connection & Projections Unit Testing**:
+- [x] **Core Configuration, Connection, Projections & Audit Sync Unit Testing**:
   - Added unit test suites verifying foundational behaviors:
     - `tests/test_config.py`: Validates default settings, environment overrides, and folder ID sanitization.
     - `tests/test_database_connection.py`: Verifies PRAGMA foreign keys, row factory, and transactional commits/rollbacks.
     - `tests/test_projections.py`: Tests compound interest formula, linear zero-rate edge cases, and 10/20/30-year scenario milestones.
+    - `tests/test_validate_audit_sync.py`: Validates AUDIT.md structural verification and bypass flags.
   - Acceptance Criteria: Implement unit test suites ensuring strict typing and passing all quality gates.
 
 - [ ] **Remaining Modules Awaiting Regression Coverage**:
