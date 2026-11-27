@@ -14,11 +14,22 @@ dependencies = [
     "google-auth-httplib2>=0.2.0",
     "google-auth-oauthlib>=1.2.0",
     "google-genai>=0.1.0",
-    "jopedro-core-lib>=0.1.0b1",
-    "finances-data @ git+https://github.com/jopedro-labs/finances-data.git",
+    "jopedro-core-lib>=0.3.0",
+    "jopedro-finances-data>=0.1.0",
     "pandas>=2.2.0",
+    "pydantic>=2.7.0",
     "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
     "yfinance>=0.2.30",
+]
+
+[project.optional-dependencies]
+dev = [
+    "bandit>=1.7.0",
+    "mypy>=1.10.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.4.0",
 ]
 
 [tool.setuptools.packages.find]

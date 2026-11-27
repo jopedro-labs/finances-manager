@@ -5,6 +5,7 @@ from __future__ import annotations
 import sys
 from typing import Any
 
+import pandas as pd
 import yfinance as yf
 from core_lib.logger import logger
 
@@ -41,7 +42,11 @@ def get_exchange_rate(from_currency: str, to_currency: str = "EUR") -> float | N
         hist: Any = pair_ticker.history(period="1d")
 
         if not hist.empty:
-            return float(hist["Close"].iloc[-1])
+            close_series = hist["Close"]
+            if not close_series.empty:
+                val = close_series.iloc[-1]
+                if not pd.isna(val):
+                    return float(val)
 
         err = ExchangeRateFetchError(
             f"[currency exchange] No history returned for exchange rate symbol '{pair_symbol}'."
@@ -52,7 +57,7 @@ def get_exchange_rate(from_currency: str, to_currency: str = "EUR") -> float | N
         err = ExchangeRateFetchError(
             f"[currency exchange] Error retrieving exchange rate for {from_curr}/{to_curr}: {e}"
         )
-        logger.error(str(err), exception=e)
+        logger.error(f"{err}: {e}")
         return None
 
 

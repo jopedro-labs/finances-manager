@@ -30,7 +30,7 @@ def migrate_portfolio_to_sqlite() -> None:
 
     if not portfolio_file.exists():
         logger.error(f"[migrate] Portfolio file not found at '{portfolio_file}'.")
-        return
+        sys.exit(1)
 
     logger.section("[migrate] Reconciling Portfolio JSON Seed with SQLite Database")
 
